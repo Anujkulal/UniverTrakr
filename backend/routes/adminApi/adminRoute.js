@@ -11,41 +11,37 @@ import {
   updateAdminLoggedInPasswordController,
   updateSelectedAdminPasswordController,
 } from "../../controllers/adminController.js";
+import {
+  addStudentDetailsController,
+  getAllStudentDetailsController,
+  getStudentByIdDetailsController,
+  updateSelectedStudentPasswordController
+} from "../../controllers/studentController.js";
 import { authenticate, roleOnly } from "../../middlewares/authenticate.js";
 import upload from "../../middlewares/multerMiddleware.js";
-import { addStudentDetailsController, updateSelectedStudentPasswordController } from "../../controllers/studentController.js";
 
 const router = express.Router();
 
-router.post("/register", authenticate, roleOnly("Admin"), adminRegisterController);
-router.post("/login", adminLoginController);
-router.post("/logout", adminLogoutController);
-router.put("/update-password", authenticate, roleOnly("Admin"), updateAdminLoggedInPasswordController);
-router.put("/update-password/:userId", authenticate, roleOnly("Admin"), updateSelectedAdminPasswordController);
+// Auth
+router.post("/auth/register", authenticate, roleOnly("Admin"), adminRegisterController);
+router.post("/auth/login", adminLoginController);
+router.post("/auth/logout", adminLogoutController);
 
-//Admin
-router.post(
-  "/add",
-  authenticate,
-  upload.single("profile"),
-  roleOnly("Admin"),
-  addAdminDetailsController
-);
-router.get("/get-allAdmins", authenticate, roleOnly("Admin"), getAllAdminDetailsController);
-router.post("/get-adminById", authenticate, roleOnly("Admin"), getAdminByIdDetailsController);
-router.get("/get-myDetail", authenticate, roleOnly("Admin"), getMyDetailsController);
-router.put("/updateAdmin/:adminId", authenticate, roleOnly("Admin"), upload.single("profile"), updateAdminDetailsController);
+// Admin - self actions
+router.get("/me", authenticate, roleOnly("Admin"), getMyDetailsController);
+router.put("/me/password", authenticate, roleOnly("Admin"), updateAdminLoggedInPasswordController);
 
-//Faculty
+// Admin - admin management
+router.post("/", authenticate, upload.single("profile"), roleOnly("Admin"), addAdminDetailsController);  // Create admin
+router.get("/", authenticate, roleOnly("Admin"), getAllAdminDetailsController);                         // Get all admins
+router.get("/:adminId", authenticate, roleOnly("Admin"), getAdminByIdDetailsController);                // Get admin by ID
+router.put("/:adminId", authenticate, roleOnly("Admin"), upload.single("profile"), updateAdminDetailsController);  // Update admin
+router.put("/:userId/password", authenticate, roleOnly("Admin"), updateSelectedAdminPasswordController); // Update another admin's password
 
-//Student
-router.put("/update-student-password/:userId", roleOnly("Admin"), authenticate, updateSelectedStudentPasswordController);
-router.post(
-  "/add-student",
-  authenticate,
-  roleOnly("Admin", "Faculty"),
-  upload.single("profile"),
-  addStudentDetailsController
-);
+// Student management (by Admin)
+router.post("/students", authenticate, roleOnly("Admin"), upload.single("profile"), addStudentDetailsController);      // Add student
+router.get("/students", authenticate, roleOnly("Admin"), getAllStudentDetailsController);                              // Get all students
+router.get("/students/:enrollmentNo", authenticate, roleOnly("Admin"), getStudentByIdDetailsController);               // Get student by enrollmentNo
+router.put("/students/:userId/password", authenticate, roleOnly("Admin"), updateSelectedStudentPasswordController);    // Update student password
 
 export default router;

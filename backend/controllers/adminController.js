@@ -221,7 +221,7 @@ const getAllAdminDetailsController = async (req, res) => {
 
 const getAdminByIdDetailsController = async (req, res) => {
   try{
-    const {adminId} = req.body;
+    const {adminId} = req.params;
     const user = await AdminModel.findOne({adminId})
 
     if (!user) {
