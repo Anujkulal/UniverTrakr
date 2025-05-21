@@ -15,7 +15,8 @@ import {
   addStudentDetailsController,
   getAllStudentDetailsController,
   getStudentByIdDetailsController,
-  updateSelectedStudentPasswordController
+  updateSelectedStudentPasswordController,
+  updateStudentDetailsController
 } from "../../controllers/studentController.js";
 import { authenticate, roleOnly } from "../../middlewares/authenticate.js";
 import upload from "../../middlewares/multerMiddleware.js";
@@ -43,5 +44,6 @@ router.post("/students", authenticate, roleOnly("Admin"), upload.single("profile
 router.get("/students", authenticate, roleOnly("Admin"), getAllStudentDetailsController);                              // Get all students
 router.get("/students/:enrollmentNo", authenticate, roleOnly("Admin"), getStudentByIdDetailsController);               // Get student by enrollmentNo
 router.put("/students/:userId/password", authenticate, roleOnly("Admin"), updateSelectedStudentPasswordController);    // Update student password
+router.put("/students/:enrollmentNo", authenticate, roleOnly("Admin"), upload.single("profile"), updateStudentDetailsController);    // Update student details
 
 export default router;

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import connectDB from "./config/db.js";
 import UserModel from "./models/userModel.js";
 import AdminModel from "./models/adminModel.js";
+import bcrypt from "bcryptjs";
 
 dotenv.config();
 
@@ -14,10 +15,13 @@ const seedAdmin = async () => {
     await UserModel.deleteMany({});
     await AdminModel.deleteMany({});
 
+    // const password = "admin123";
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash("admin123", salt);
     // Insert new sample admin credentials and details
     await UserModel.create({
       userId: "admin123",
-      password: "admin123",
+      password: hashedPassword,
       role: "Admin",
     });
 

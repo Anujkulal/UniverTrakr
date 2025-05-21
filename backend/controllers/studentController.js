@@ -225,6 +225,40 @@ const getStudentByIdDetailsController = async (req, res) => {
   }
 }
 
+const getStudentMyDetailsController = async (req, res) => {
+  try{
+    const user = await StudentModel.findOne({enrollmentNo: req.user.userId})
+    if(!user){
+      return res.status(404).json({message: "User not found"})
+    }
+
+    return res.status(200).json({message: "User found", user})
+  } catch(error){
+    console.error("Error while fetching student details:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+const updateStudentDetailsController = async (req, res) => {
+  try {
+    const enrollmentNo = req.params.enrollmentNo;
+    const updates = {...req.body};
+
+    if(req.file){
+      updates.profile = req.file.filename;
+    }
+
+    const updatedStudent = await StudentModel.findOneAndUpdate({enrollmentNo}, {$set: updates}, {new: true})
+    if(!updatedStudent){
+      return res.status(404).json({message: "Student not found"});
+    }
+    return res.status(200).json({message: "Student details updated successfully", student: updatedStudent});
+  } catch (error) {
+    console.error("Error while updating student details:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 const deleteStudentController = async (req, res) => {}
 
 export {
@@ -236,4 +270,6 @@ export {
     addStudentDetailsController,
     getAllStudentDetailsController,
     getStudentByIdDetailsController,
+    getStudentMyDetailsController,
+    updateStudentDetailsController,
 }
