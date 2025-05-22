@@ -33,7 +33,7 @@ const seedAdmin = async () => {
       email: "admin@gmail.com",
       phone: "1234567890",
       gender: "Male",
-      profile: "default-profile.png",
+     // profile: "default-profile.png",
     });
 
     const userDetails = await UserModel.findOne({ userId: "admin123" });
