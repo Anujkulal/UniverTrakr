@@ -1,7 +1,8 @@
+import { baseUrl } from "@/lib/baseUrl";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const backend_url = import.meta.env.VITE_BACKEND_URL;
+const backend_url = baseUrl();
 
 interface AuthState {
     user: null | object;
@@ -34,7 +35,7 @@ export const login = createAsyncThunk<
         // console.log('Login response:', response);
         
         if(response.data.user){
-            localStorage.setItem("user", JSON.stringify(response.data.user.userId))
+            localStorage.setItem("user", JSON.stringify(response.data.user))
         }
         return {
             user: response.data.user,
@@ -57,7 +58,7 @@ export const logout = createAsyncThunk<void, {role: string}, {rejectValue: strin
             else return rejectWithValue('Invalid role')
 
             await axios.post(url, {}, { withCredentials: true });
-            localStorage.removeItem("user");
+            // localStorage.removeItem("user");
             return;
         }
         catch (err: any) {

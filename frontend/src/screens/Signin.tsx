@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/Button'
-import H2 from '@/components/ui/H2'
-import { Input } from '@/components/ui/Input'
 import { useDispatch, useSelector } from 'react-redux'
-import { login } from '@/redux/slices/authSlice'
 import type { RootState, AppDispatch } from '@/redux/store'
+import H2 from '@/components/ui/H2'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import { login } from '@/redux/slices/authSlice'
 import ErrorBar from '@/components/ui/ErrorBar'
 
 const roles = [
-  { label: 'Admin', value: 'admin' },
-  { label: 'Faculty', value: 'faculty' },
-  { label: 'Student', value: 'student' },
+  { value: 'admin' },
+  { value: 'faculty' },
+  { value: 'student' },
 ]
 
 const Signin = () => {
@@ -20,12 +20,16 @@ const Signin = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
   const auth = useSelector((state: RootState) => state.auth)
+  // console.log('Auth state:', auth)
 
   // Use role from location.state if present, else default to 'admin'
   const [role, setRole] = useState(() => {
     const stateRole = location.state?.role
+    // console.log('Initial role from state:', stateRole)
     return roles.some(r => r.value === stateRole) ? stateRole : 'admin'
   })
+  // console.log('Current role:', role)
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -41,7 +45,7 @@ const Signin = () => {
     else setError('')
     if (auth.user) {
       // Redirect to dashboard or home after successful login
-      navigate('/')
+      navigate(`/${role}/profile`)
     }
   }, [auth, navigate])
 
@@ -62,7 +66,7 @@ const Signin = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-200">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
       <motion.div
         className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md"
         initial={{ opacity: 0, y: 40 }}
@@ -78,7 +82,7 @@ const Signin = () => {
               onClick={() => handleRoleChange(r.value)}
               variant={role === r.value ? 'default' : 'outline'}
             >
-              {r.label}
+              {r.value.charAt(0).toUpperCase() + r.value.slice(1)}  {/* Capitalize first letter of role */}
             </Button>
           ))}
         </div>
@@ -113,21 +117,14 @@ const Signin = () => {
             />
           </div>
           {error && (
-            // <motion.div
-            //   // className="mb-4 text-red-600 text-sm"
-            //   initial={{ opacity: 0 }}
-            //   animate={{ opacity: 1 }}
-            // >
-              // {/* {error} */}
               <ErrorBar message={error} onClose={() => setError("")} />
-            // </motion.div>
           )}
           <Button
             type='submit'
             className='w-full mt-2'
             disabled={auth.loading}
           >
-            {auth.loading ? 'Signing In...' : `Sign In as ${roles.find(r => r.value === role)?.label}`}
+            {auth.loading ? 'Signing In...' : `Sign In as ${roles.find(r => r.value === role)?.value}`}
           </Button>
         </motion.form>
       </motion.div>
