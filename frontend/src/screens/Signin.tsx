@@ -1,8 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 import H2 from '@/components/ui/H2'
 import { Input } from '@/components/ui/Input'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '@/redux/slices/authSlice'
+import type { RootState, AppDispatch } from '@/redux/store'
+import ErrorBar from '@/components/ui/ErrorBar'
 
 const roles = [
   { label: 'Admin', value: 'admin' },
@@ -11,10 +16,34 @@ const roles = [
 ]
 
 const Signin = () => {
-  const [role, setRole] = useState('admin')
+  const location = useLocation()
+  const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
+  const auth = useSelector((state: RootState) => state.auth)
+
+  // Use role from location.state if present, else default to 'admin'
+  const [role, setRole] = useState(() => {
+    const stateRole = location.state?.role
+    return roles.some(r => r.value === stateRole) ? stateRole : 'admin'
+  })
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (location.state?.role && roles.some(r => r.value === location.state.role)) {
+      setRole(location.state.role)
+    }
+  }, [location.state])
+
+  useEffect(() => {
+    if (auth.error) setError(auth.error)
+    else setError('')
+    if (auth.user) {
+      // Redirect to dashboard or home after successful login
+      navigate('/')
+    }
+  }, [auth, navigate])
 
   const handleRoleChange = (newRole: string) => {
     setRole(newRole)
@@ -25,19 +54,17 @@ const Signin = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Dummy validation
     if (!email || !password) {
       setError('Please enter both email and password.')
       return
     }
-    // TODO: Add actual signin logic here
-    alert(`Signing in as ${role} with email: ${email}`)
+    dispatch(login({ email, password, role }))
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-200">
       <motion.div
-        className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md"
+        className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -46,10 +73,10 @@ const Signin = () => {
         <div className="flex justify-center mb-6 space-x-4">
           {roles.map((r) => (
             <Button
-            type='button'
-            key={r.value}
-            onClick={() => handleRoleChange(r.value)}
-            variant={role === r.value ? 'default' : 'outline'}
+              type='button'
+              key={r.value}
+              onClick={() => handleRoleChange(r.value)}
+              variant={role === r.value ? 'default' : 'outline'}
             >
               {r.label}
             </Button>
@@ -63,43 +90,44 @@ const Signin = () => {
         >
           <div className="mb-4">
             <Input
-            id='email'
-            name='email'
-            type="email"
-            label = "Email"
-            value={email}
+              id='email'
+              name='email'
+              type="text"
+              label="Email"
+              value={email}
               onChange={e => setEmail(e.target.value)}
               autoComplete="email"
               required
             />
           </div>
           <div className="mb-4">
-            
             <Input 
-            id='password'
-            name='password'
-            type='password'
-            label = "Password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            autoComplete='current-password'
-            required
+              id='password'
+              name='password'
+              type='password'
+              label="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              autoComplete='current-password'
+              required
             />
           </div>
           {error && (
-            <motion.div
-              className="mb-4 text-red-600 text-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              {error}
-            </motion.div>
+            // <motion.div
+            //   // className="mb-4 text-red-600 text-sm"
+            //   initial={{ opacity: 0 }}
+            //   animate={{ opacity: 1 }}
+            // >
+              // {/* {error} */}
+              <ErrorBar message={error} onClose={() => setError("")} />
+            // </motion.div>
           )}
           <Button
-          type='submit'
-          className='w-full mt-2'
+            type='submit'
+            className='w-full mt-2'
+            disabled={auth.loading}
           >
-            Sign In as {roles.find(r => r.value === role)?.label}
+            {auth.loading ? 'Signing In...' : `Sign In as ${roles.find(r => r.value === role)?.label}`}
           </Button>
         </motion.form>
       </motion.div>

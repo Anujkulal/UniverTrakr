@@ -6,7 +6,7 @@ import type React from 'react';
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof buttonVariants>;
 
 const buttonVariants = cva(
-  'inline-flex cursor-pointer items-center justify-center rounded-2xl text-md font-medium transition-colors focus:outline-none disabled:opacity-50 disabled:pointer-events-none',
+  'inline-flex cursor-pointer items-center justify-center rounded-2xl text-md font-semibold transition-colors focus:outline-none disabled:opacity-50 disabled:pointer-events-none',
   {
     variants: {
       variant: {
