@@ -7,9 +7,9 @@ import upload from "../../middlewares/multerMiddleware.js";
 const router = express.Router();
 
 //Faculty
-router.post('/register', authenticate, roleOnly("Admin", "Faculty"), facultyRegisterController);
-router.post('/login', facultyLoginController);
-router.post('/logout', facultyLogoutController);
+router.post('/auth/register', authenticate, roleOnly("Admin", "Faculty"), facultyRegisterController);
+router.post('/auth/login', facultyLoginController);
+router.post('/auth/logout', facultyLogoutController);
 
 //student
 router.post( "/add-student", authenticate, roleOnly("Faculty"), upload.single("profile"), addStudentDetailsController);

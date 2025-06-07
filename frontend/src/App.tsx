@@ -2,7 +2,6 @@ import React from 'react'
 import HomeScreen from './screens/HomeScreen'
 import { Route, Routes } from 'react-router'
 import Signin from './screens/Signin'
-import Sidebar from './components/features/Sidebar'
 import ProfileScreen from './screens/ProfileScreen'
 
 const App = () => {
