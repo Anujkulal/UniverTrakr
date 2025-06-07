@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { motion } from 'framer-motion'
-import studentImg from "../assets/iconImg/student.jpg"
-import facultyImg from "../assets/iconImg/faculty.jpg"
-import adminImg from "../assets/iconImg/admin.jpg"
+import studentImg from "@/assets/iconImg/student.jpg"
+import facultyImg from "@/assets/iconImg/faculty.jpg"
+import adminImg from "@/assets/iconImg/admin.jpg"
 import H2 from '@/components/ui/H2'
 import { Button } from '@/components/ui/Button'
+import { mainTitle } from '@/lib/mainTitle'
 
 const roles = [
 	{
@@ -31,7 +32,7 @@ const roles = [
 	},
 ]
 
-const HomeScreen = () => {
+const LandingScreen = () => {
 	const navigate = useNavigate()
 
 	useEffect(() => {}, [navigate])
@@ -43,7 +44,7 @@ const HomeScreen = () => {
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.6 }}
 			>
-				Welcome to College Management System
+				Welcome to {mainTitle()}
 			</motion.h1>
             
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
@@ -90,4 +91,4 @@ const HomeScreen = () => {
 	)
 }
 
-export default HomeScreen
+export default LandingScreen

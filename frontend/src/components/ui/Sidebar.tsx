@@ -18,6 +18,7 @@ import { logout } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/redux/store";
 import { Button } from "../ui/Button";
+import { mainAuthor, mainTitle } from "@/lib/mainTitle";
 
 type Role = "admin" | "faculty" | "student";
 
@@ -69,8 +70,9 @@ const Sidebar: React.FC<SidebarProps> = ({ role = "student" }) => {
 
   return (
     <aside className="h-screen w-64 bg-gradient-to-b from-gray-200 to-gray-300 text-black flex flex-col shadow-lg">
-      <div className="flex items-center justify-center h-20 border-b border-zinc-600">
-        <span className="text-2xl font-bold tracking-wide">College Portal</span>
+      <div className="flex flex-col items-center justify-center h-20 border-b border-zinc-300">
+        <span className="text-2xl font-bold tracking-wide">{mainTitle()} </span>
+        <span className="mt-2 bg-gradient-to-r from-blue-200 to-blue-300 text-sm  shadow p-1 rounded-2xl">{role}</span>
       </div>
       <nav className="flex-1 py-6 m-2">
         <ul className="space-y-2">
@@ -102,7 +104,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role = "student" }) => {
         </Button>
       </nav>
       <div className="p-4 text-xs text-black text-center">
-        &copy; {new Date().getFullYear()} College Management System
+        &copy; {new Date().getFullYear()} {mainTitle()} - Built by {mainAuthor()}
       </div>
     </aside>
   );

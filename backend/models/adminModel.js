@@ -2,14 +2,14 @@ import mongoose from "mongoose";
 
 const adminSchema = new mongoose.Schema(
   {
-    firstname: {
+    firstName: {
       type: String,
       required: true,
     },
-    middlename: {
+    middleName: {
       type: String,
     },
-    lastname: {
+    lastName: {
       type: String,
     },
     adminId: {
