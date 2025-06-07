@@ -1,9 +1,9 @@
 import Sidebar from '@/components/features/Sidebar'
 import { Button } from '@/components/ui/Button'
 import H2 from '@/components/ui/H2'
-import React, { useEffect } from 'react'
+import  { useEffect } from 'react'
 import { FaUserCircle } from 'react-icons/fa'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 
 const ProfileScreen = () => {

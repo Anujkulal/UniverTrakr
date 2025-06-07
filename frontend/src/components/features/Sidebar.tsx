@@ -8,7 +8,6 @@ import {
   FaCalendarAlt,
   FaBook,
   FaBell,
-  FaUsers,
   FaUniversity,
   FaClipboardList,
   FaFileAlt,
