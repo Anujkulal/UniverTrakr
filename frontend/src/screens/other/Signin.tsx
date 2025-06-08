@@ -7,7 +7,7 @@ import H2 from "@/components/ui/H2";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { login } from "@/redux/slices/authSlice";
-import ErrorBar from "@/components/ui/ErrorBar";
+import MessageBar from "@/components/ui/MessageBar";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
 
@@ -127,7 +127,7 @@ const Signin = () => {
               {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
             </span>
           </div>
-          {error && <ErrorBar message={error} onClose={() => setError("")} />}
+          {error && <MessageBar variant="error" message={error} onClose={() => setError("")} />}
           <Button type="submit" className="w-full mt-2" disabled={auth.loading}>
             {auth.loading
               ? "Signing In..."

@@ -10,6 +10,7 @@ import { baseUrl } from "@/lib/baseUrl";
 import { extractDate } from "@/lib/utils";
 
 const backend_url = baseUrl();
+const base_url = backend_url.replace("/api", "");
 
 const ProfileScreen = () => {
   // const navigate = useNavigate();
@@ -22,6 +23,7 @@ const ProfileScreen = () => {
     email: "",
     userId: "",
     role: auth?.role?.toLowerCase(),
+    profile:"",
     department: "",
     joined: "",
   })
@@ -42,7 +44,7 @@ const ProfileScreen = () => {
       try {
         const response = await axios.get(`${backend_url}/${auth.role}/me`, {withCredentials: true});
         console.log('Current user data:', response);
-        console.log("Role from auth:", auth.role);
+        // console.log("Role from auth:", auth.role);
         
         setUser(prev => ({
           ...prev,
@@ -50,6 +52,7 @@ const ProfileScreen = () => {
           email: response.data.user.email,
           userId: response.data.user.adminId || response.data.user.enrollmentNo || response.data.user.enrollmentNo, // Use adminId if available, else userId
           role: auth?.role?.toLowerCase(),
+          profile: response.data.user.profile || "",
           department: response.data.user.branch || "Nil",
           joined: extractDate(response.data.user.createdAt) || "01-01-2000", // Default date if not available
         }))
@@ -86,7 +89,12 @@ const ProfileScreen = () => {
       <div className="flex flex-1 items-center justify-center">
       {/* <Sidebar role={user.role} /> */}
         <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md flex flex-col items-center">
-          <FaUserCircle className="text-blue-500 mb-4" size={80} />
+          {/* <FaUserCircle className="text-blue-500 mb-4" size={80} /> */}
+          <img
+            src={`${base_url}/media/${user.role}/${user.profile}` || `${base_url}/media/default/${user.profile}`}
+            alt={`${user.profile}`}
+            className="w-24 h-24 rounded-full mb-4 border-4 border-indigo-200"
+          />
           <H2 className="text-blue-700">{user.name}</H2>
           <p className="text-gray-600 mb-1">{user.email}</p>
           <p className="text-gray-600 mb-1">{user.userId}</p>

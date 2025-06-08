@@ -178,6 +178,7 @@ const addStudentDetailsController = async (req, res) => {
     }
 
     const profileImage = req.file ? req.file.filename : undefined;
+    // console.log("Profile Image from backend student controller:", profileImage);
     
     const newUser = new StudentModel({
       ...req.body,

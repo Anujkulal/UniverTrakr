@@ -1,0 +1,6 @@
+*.png
+
+!default/default-profile.png
+!admin/default-profile.png
+!faculty/default-profile.png
+!student/default-profile.png

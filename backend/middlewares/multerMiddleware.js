@@ -25,11 +25,11 @@ const storage = multer.diskStorage({
     // }
     // else if (req.body?.type === "profile"){
     if (req.body?.adminId) {
-      filename = `Admin_profile_${req.body.adminId}.png`;
+      filename = `admin_profile_${req.body.adminId}.png`;
     } else if (req.body?.facultyId) {
-      filename = `Faculty_profile_${req.body.facultyId}.png`;
+      filename = `faculty_profile_${req.body.facultyId}.png`;
     } else if (req.body?.enrollmentNo) {
-      filename = `Student_profile_${req.body.enrollmentNo}.png`;
+      filename = `student_profile_${req.body.enrollmentNo}.png`;
     }
     // }
     // else if (req.body?.type === "material") {
