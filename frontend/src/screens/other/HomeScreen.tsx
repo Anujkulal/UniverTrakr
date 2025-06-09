@@ -24,12 +24,8 @@ const HomeScreen = () => {
       <Routes>
           <Route index path="profile" element={<ProfileScreen />} />
           <Route path="student" element={<StudentScreen />} />
-        {/* <Route path="/faculty"> */}
-          <Route index path="profile" element={<ProfileScreen />} />
-        {/* </Route> */}
-        {/* <Route path="/student"> */}
-          <Route index path="profile" element={<ProfileScreen />} />
-        {/* </Route> */}
+          {/* <Route index path="profile" element={<ProfileScreen />} />
+          <Route index path="profile" element={<ProfileScreen />} /> */}
       </Routes>
     </div>
   );

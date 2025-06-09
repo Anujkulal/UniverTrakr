@@ -40,21 +40,22 @@ const sectionMap: Record<
     { label: "Admins", icon: <FaUserShield />, to: "/admin/admins" },
   ],
   faculty: [
-    { label: "Profile", icon: <FaUser />, to: "/profile" },
-    { label: "Student", icon: <FaUserGraduate />, to: "/student" },
-    { label: "Upload Marks", icon: <FaClipboardList />, to: "/upload-marks" },
-    { label: "Timetable", icon: <FaCalendarAlt />, to: "/timetable" },
-    { label: "Notice", icon: <FaBell />, to: "/notice" },
-    { label: "Material", icon: <FaFileAlt />, to: "/material" },
+    { label: "Profile", icon: <FaUser />, to: "/faculty/profile" },
+    { label: "Student", icon: <FaUserGraduate />, to: "/faculty/student" },
+    { label: "Upload Marks", icon: <FaClipboardList />, to: "/faculty/upload-marks" },
+    { label: "Timetable", icon: <FaCalendarAlt />, to: "/faculty/timetable" },
+    { label: "Notice", icon: <FaBell />, to: "/faculty/notice" },
+    { label: "Material", icon: <FaFileAlt />, to: "/faculty/material" },
   ],
   student: [
-    { label: "Profile", icon: <FaUser />, to: "/profile" },
-    { label: "Timetable", icon: <FaCalendarAlt />, to: "/timetable" },
-    { label: "Marks", icon: <FaListAlt />, to: "/marks" },
-    { label: "Materials", icon: <FaBook />, to: "/materials" },
-    { label: "Notice", icon: <FaBell />, to: "/notice" },
+    { label: "Profile", icon: <FaUser />, to: "/student/profile" },
+    { label: "Timetable", icon: <FaCalendarAlt />, to: "/student/timetable" },
+    { label: "Marks", icon: <FaListAlt />, to: "/student/marks" },
+    { label: "Materials", icon: <FaBook />, to: "/student/materials" },
+    { label: "Notice", icon: <FaBell />, to: "/student/notice" },
   ],
 };
+
 // console.log(sections)
 const Sidebar: React.FC<SidebarProps> = ({ role = "student" }) => {
   const dispatch = useDispatch<AppDispatch>();

@@ -8,18 +8,31 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import { baseUrl } from "@/lib/baseUrl";
 import { extractDate } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import EditProfile from "./features/EditProfile";
+import MessageBar from "@/components/ui/MessageBar";
 
 const backend_url = baseUrl();
 const base_url = backend_url.replace("/api", "");
 
 const ProfileScreen = () => {
+
   // const navigate = useNavigate();
 
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
-  // console.log('User from localStorage:', auth)
+  // console.log('User from localStorage:', auth);
+
+  const [editProfile, setEditProfile] = useState<object>();
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
 
   const [user, setUser] = useState({
     name: "",
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    gender: "",
+    phoneNumber: "",
     email: "",
     userId: "",
     role: auth?.role?.toLowerCase(),
@@ -39,38 +52,43 @@ const ProfileScreen = () => {
   //   }
   // }, [auth, navigate]);
 
-  useEffect(() => {
-    const getCurrUser = async () => {
-      try {
-        const response = await axios.get(`${backend_url}/${auth.role}/me`, {withCredentials: true});
-        console.log('Current user data:', response);
-        // console.log("Role from auth:", auth.role);
-        
-        setUser(prev => ({
-          ...prev,
-          name: `${response.data.user?.firstName} ${response.data.user?.middleName} ${response.data.user?.lastName}`,
-          email: response.data.user.email,
-          userId: response.data.user.adminId || response.data.user.enrollmentNo || response.data.user.enrollmentNo, // Use adminId if available, else userId
-          role: auth?.role?.toLowerCase(),
-          profile: response.data.user.profile || "",
-          department: response.data.user.branch || "Nil",
-          joined: extractDate(response.data.user.createdAt) || "01-01-2000", // Default date if not available
-        }))
-      } catch (error) {
-        console.error('Failed to fetch user profile:', error)
-      }
+  const fetchCurrUser = async () => {
+    try {
+      const response = await axios.get(`${backend_url}/${auth.role}/me`, {withCredentials: true});
+      console.log('Current user data:', response);
+      // console.log("Role from auth:", auth.role);
+      
+      setUser(prev => ({
+        ...prev,
+        name: `${response.data.user?.firstName} ${response.data.user?.middleName} ${response.data.user?.lastName}`,
+        firstName: response.data.user?.firstName,
+        middleName: response.data.user?.middleName,
+        lastName: response.data.user?.lastName,
+        gender: response.data.user?.gender,
+        phoneNumber: response.data.user?.phoneNumber,
+        email: response.data.user.email,
+        userId: response.data.user.adminId || response.data.user.enrollmentNo || response.data.user.enrollmentNo, // Use adminId if available, else userId
+        role: auth?.role?.toLowerCase(),
+        profile: response.data.user.profile || "",
+        department: response.data.user.branch || "Nil",
+        joined: extractDate(response.data.user.createdAt) || "01-01-2000", // Default date if not available
+      }))
+    } catch (error) {
+      console.error('Failed to fetch user profile:', error)
     }
+  }
+  useEffect(() => {
     if(auth && auth.userId && auth.role){
-      getCurrUser();
+      fetchCurrUser();
     }
   }, [])
 
-  // const getCurrUser = async () => {
+  // const fetchCurrUser = async () => {
   //   const response = await axios.get(`${backend_url}/${auth.role}/me`);
   //   // console.log('Current user data:', response);
   //   user.name = `${response.data.user.firstname} ${response.data.user.middlename} ${response.data.user.lastname}`;
   // };
-  // getCurrUser();
+  // fetchCurrUser();
   
   // Dummy user data for UI demonstration
   // const user = {
@@ -84,14 +102,30 @@ const ProfileScreen = () => {
   // Prevent rendering if not authenticated
   if (!auth || !auth.userId) return null;
 
+  const handleEditProfile = () => {
+    if(user.name.trim().length > 0){
+      console.log('User data:', user);
+      setEditProfile(user);
+    }
+  }
+
+  const handleCloseEdit = (updated?: boolean) => {
+    setEditProfile(undefined);
+    if (updated) {
+      // Optionally, you can refresh the user data here
+      setMessage({ type: 'success', text: 'Profile updated successfully!' });
+    }
+  };
+
   return (
     // <div className="flex min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
       <div className="flex flex-1 items-center justify-center">
+        <MessageBar variant={message?.type} message={message?.text || ""} onClose={() => setMessage(null)}/>
       {/* <Sidebar role={user.role} /> */}
         <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md flex flex-col items-center">
           {/* <FaUserCircle className="text-blue-500 mb-4" size={80} /> */}
           <img
-            src={`${base_url}/media/${user.role}/${user.profile}` || `${base_url}/media/default/${user.profile}`}
+            src={`${base_url}/media/${user.role}/${user.profile}?v=${ Date.now()}` || `${base_url}/media/default/${user.profile}?v=${ Date.now()}`}
             alt={`${user.profile}`}
             className="w-24 h-24 rounded-full mb-4 border-4 border-indigo-200"
           />
@@ -113,8 +147,30 @@ const ProfileScreen = () => {
             </div>
           </div>
 
-          <Button>Edit Profile</Button>
+          <Button
+          onClick={handleEditProfile}
+          >
+            Edit Profile
+          </Button>
         </div>
+        <AnimatePresence>
+          { editProfile && (
+            <motion.div
+            className="fixed inset-0 bg-black/40 bg-opacity-50 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            >
+              <EditProfile
+              fetchCurrUser={fetchCurrUser}
+              user = {editProfile}
+              onClose={handleCloseEdit}
+              setMessage={setMessage}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     // </div>
   );
