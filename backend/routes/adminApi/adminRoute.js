@@ -13,6 +13,7 @@ import {
 } from "../../controllers/adminController.js";
 import {
   addStudentDetailsController,
+  deleteStudentController,
   getAllStudentDetailsController,
   getStudentByIdDetailsController,
   updateSelectedStudentPasswordController,
@@ -38,6 +39,7 @@ router.get("/students", authenticate, roleOnly("Admin"), getAllStudentDetailsCon
 router.get("/students/:enrollmentNo", authenticate, roleOnly("Admin"), getStudentByIdDetailsController);               // Get student by enrollmentNo
 router.put("/students/:userId/password", authenticate, roleOnly("Admin"), updateSelectedStudentPasswordController);    // Update student password
 router.put("/students/:enrollmentNo", authenticate, roleOnly("Admin"), upload.single("profile"), updateStudentDetailsController);    // Update student details
+router.delete("/students/:enrollmentNo", authenticate, roleOnly("Admin"), deleteStudentController)
 
 // Admin - admin management
 router.post("/", authenticate, upload.single("profile"), roleOnly("Admin"), addAdminDetailsController);  // Create admin

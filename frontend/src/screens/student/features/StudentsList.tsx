@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaChevronDown, FaChevronUp, FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 import axios from "axios";
 import { baseUrl } from "@/lib/baseUrl";
 import { Button } from "@/components/ui/Button";
@@ -7,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import H2 from "@/components/ui/H2";
 import EditStudent from "./EditStudent";
 import MessageBar from "@/components/ui/MessageBar";
+import { Input } from "@/components/ui/Input";
 
 const backend_url = baseUrl();
 const base_url = backend_url.replace("/api", "");
@@ -32,6 +34,7 @@ const StudentsList = () => {
   const [loading, setLoading] = useState(false);
   const [editStudent, setEditStudent] = useState<Student | null>(null);
   const [message, setMessage] = useState<{type: "success" | "error"; text: string} | null >(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchStudents();
@@ -64,16 +67,50 @@ const StudentsList = () => {
     if (updated) fetchStudents(); // Refresh the list if updated
   };
 
+  const handleDelete = async (enrollmentNo: string, firstName: string, lastName: string) => {
+    if (!window.confirm(`Are you sure you want to remove student: "${firstName} ${lastName}"?`)) {
+      return;
+    }
+    try {
+      const res = await axios.delete(`${backend_url}/admin/students/${enrollmentNo}`, {
+        withCredentials: true,
+      });
+      setMessage({ type: "success", text: res.data.message });
+      fetchStudents();
+    } catch (err) {
+      console.error("Error deleting student:", err);
+      setMessage({ type: "error", text: "Failed to delete student. Please try again." });
+    }
+  }
+
+  const filteredStudents = students.filter((student) => {
+    return student.enrollmentNo.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+            student.firstName.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+            student.lastName.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+            student.branch.toLowerCase().includes(searchTerm.trim().toLowerCase());
+  });
+
   return (
     <div className="w-full max-w-3xl mx-auto mt-8">
       <MessageBar variant={message?.type} message={message?.text || ''} onClose={() => setMessage(null)}/>
       <H2 className="text-blue-700">Students List</H2>
+      <div className="mb-4">
+      
+        <Input
+        type="search"
+        placeholder="Search by Enrollment No, Name or Branch..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="bg-blue-100"
+        />
+      </div>
       {loading ? (
         <div className="text-center py-8">Loading...</div>
-      ) : students.length === 0 ? (
+      ) : filteredStudents.length === 0 ? (
         <span>Students not found!</span>
       ) : (
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        {/* <input type="search" name="" id="" placeholder="search here..."/> */}
           <table className="w-full text-left">
             <thead className="bg-blue-200">
               <tr>
@@ -84,7 +121,7 @@ const StudentsList = () => {
               </tr>
             </thead>
             <tbody>
-              {students.map((student) => (
+              {filteredStudents.map((student) => (
                 <React.Fragment key={student._id}>
                   <tr className="border-b border-gray-200 hover:bg-blue-50 transition">
                     <td className="px-4 py-3 font-medium">
@@ -109,6 +146,12 @@ const StudentsList = () => {
                         onClick={() => handleEdit(student)}
                       >
                         <FaEdit />
+                      </Button>
+                      <Button
+                      variant={"destructive"}
+                      onClick={() => handleDelete(student.enrollmentNo, student.firstName, student.lastName)}
+                      >
+                        <MdDeleteForever />
                       </Button>
                     </td>
                   </tr>

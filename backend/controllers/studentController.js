@@ -260,7 +260,21 @@ const updateStudentDetailsController = async (req, res) => {
   }
 }
 
-const deleteStudentController = async (req, res) => {}
+const deleteStudentController = async (req, res) => {
+  try {
+    const enrollmentNo = req.params.enrollmentNo;
+    const deletedStudent = await StudentModel.findOneAndDelete({enrollmentNo}, { new: true });
+    // console.log("Deleted Student:", deletedStudent);
+    if (!deletedStudent) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+    await UserModel.findOneAndDelete({ userId: deletedStudent.enrollmentNo });
+    return res.status(200).json({ message: "Student deleted successfully", student: deletedStudent });
+  } catch (error) {
+    console.error("Error while deleting student:", error);
+    res.status(500).json({ message: "Server error" }); 
+  }
+}
 
 export {
     studentRegisterController,
@@ -273,4 +287,5 @@ export {
     getStudentByIdDetailsController,
     getStudentMyDetailsController,
     updateStudentDetailsController,
+    deleteStudentController,
 }
