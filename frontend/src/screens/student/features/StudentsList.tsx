@@ -1,9 +1,189 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import { FaChevronDown, FaChevronUp, FaEdit } from "react-icons/fa";
+import axios from "axios";
+import { baseUrl } from "@/lib/baseUrl";
+import { Button } from "@/components/ui/Button";
+import { motion, AnimatePresence } from "framer-motion";
+import H2 from "@/components/ui/H2";
+import EditStudent from "./EditStudent";
+import MessageBar from "@/components/ui/MessageBar";
 
-const StudentsList = () => {
-  return (
-    <div>StudentsList</div>
-  )
+const backend_url = baseUrl();
+const base_url = backend_url.replace("/api", "");
+
+interface Student {
+  _id: string;
+  firstname: string;
+  middlename?: string;
+  lastname: string;
+  enrollmentNo: string;
+  branch: string;
+  email: string;
+  phoneNumber: string;
+  semester: string;
+  gender: string;
+  profile?: string;
+  [key: string]: any;
 }
 
-export default StudentsList
+const StudentsList = () => {
+  const [students, setStudents] = useState<Student[]>([]);
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [editStudent, setEditStudent] = useState<Student | null>(null);
+  const [message, setMessage] = useState<{type: "success" | "error"; text: string} | null >(null);
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const fetchStudents = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${backend_url}/admin/students`, {
+        withCredentials: true,
+      });
+      // console.log('Fetched students:', res.data.students)
+      setStudents(res.data.students || []);
+    } catch (err) {
+      console.error("Error fetching students:", err);
+    }
+    setLoading(false);
+  };
+
+  const handleExpand = (id: string) => {
+    setExpanded(expanded === id ? null : id);
+  };
+
+  const handleEdit = (student: Student) => {
+    setEditStudent(student);
+  };
+
+  const handleCloseEdit = (updated?: boolean) => {
+    setEditStudent(null);
+    if (updated) fetchStudents(); // Refresh the list if updated
+  };
+
+  return (
+    <div className="w-full max-w-3xl mx-auto mt-8">
+      <MessageBar variant={message?.type} message={message?.text || ''} onClose={() => setMessage(null)}/>
+      <H2 className="text-blue-700">Students List</H2>
+      {loading ? (
+        <div className="text-center py-8">Loading...</div>
+      ) : students.length === 0 ? (
+        <span>Students not found!</span>
+      ) : (
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <table className="w-full text-left">
+            <thead className="bg-blue-200">
+              <tr>
+                <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Enrollment No</th>
+                <th className="px-4 py-3">Branch</th>
+                <th className="px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((student) => (
+                <React.Fragment key={student._id}>
+                  <tr className="border-b border-gray-200 hover:bg-blue-50 transition">
+                    <td className="px-4 py-3 font-medium">
+                      {student.firstName} {student.middleName || ""}{" "}
+                      {student.lastName}
+                    </td>
+                    <td className="px-4 py-3">{student.enrollmentNo}</td>
+                    <td className="px-4 py-3">{student.branch}</td>
+                    <td className="px-4 py-3 flex gap-4">
+                      <Button
+                        variant={expanded === student._id ? "outline" : "plain"}
+                        onClick={() => handleExpand(student._id)}
+                      >
+                        {expanded === student._id ? (
+                          <FaChevronUp />
+                        ) : (
+                          <FaChevronDown />
+                        )}
+                      </Button>
+                      <Button
+                        className="bg-gradient-to-r from-green-500 to-green-700 hover:bg-green-600 focus:ring-green-500"
+                        onClick={() => handleEdit(student)}
+                      >
+                        <FaEdit />
+                      </Button>
+                    </td>
+                  </tr>
+                  {/* AnimatePresence + motion for dropdown details */}
+                  <AnimatePresence>
+                    {expanded === student._id && (
+                      <motion.tr
+                        className="bg-blue-50"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.25 }}
+                      >
+                        <td colSpan={4} className="px-6 py-4">
+                          <div className="flex flex-col gap-2">
+                            {student.profile && (
+                              <div>
+                                {/* <span className="font-semibold">Profile Image:</span> */}
+                                <img
+                                  src={`${base_url}/media/student/${student.profile}?v=${student.updatedAt || Date.now()}`} 
+                                  // Force the image to reload by appending a cache-busting query string (e.g., a timestamp or Date.now()) to the image URL.
+
+                                  alt="Profile"
+                                  className="w-16 h-16 rounded-full border-2 border-indigo-300 mt-2"
+                                />
+                              </div>
+                            )}
+                            <div>
+                              <span className="font-semibold">Email:</span>{" "}
+                              {student.email}
+                            </div>
+                            <div>
+                              <span className="font-semibold">Phone:</span>{" "}
+                              {student.phoneNumber}
+                            </div>
+                            <div>
+                              <span className="font-semibold">Semester:</span>{" "}
+                              {student.semester}
+                            </div>
+                            <div>
+                              <span className="font-semibold">Gender:</span>{" "}
+                              {student.gender}
+                            </div>
+                          </div>
+                        </td>
+                      </motion.tr>
+                    )}
+                  </AnimatePresence>
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Edit student modal  */}
+      <AnimatePresence>
+        {editStudent && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <EditStudent
+              fetchStudents={fetchStudents}
+              student={editStudent}
+              onClose={handleCloseEdit}
+              setMessage={setMessage}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+export default StudentsList;

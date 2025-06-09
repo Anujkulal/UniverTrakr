@@ -61,6 +61,27 @@ export const addStudentDetails = createAsyncThunk<
   }
 });
 
+export const editStudentDetails = createAsyncThunk
+< any, {formData: FormData; enrollmentNo: string}, {rejectValue: string}
+>("student/editStudentDetails", 
+  async ({formData, enrollmentNo}, {rejectWithValue}) => {
+  try {
+    const response = await axios.put(
+      `${backend_url}/admin/students/${enrollmentNo}`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (err: any) {
+    return rejectWithValue(
+      err.response?.data?.message || "Failed to edit student details"
+    )
+  }
+})
+
 const studentSlice = createSlice({
   name: "student",
   initialState,
@@ -86,6 +107,20 @@ const studentSlice = createSlice({
       .addCase(addStudentDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to add and register student";
+      })
+      .addCase(editStudentDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = null;
+      })
+      .addCase(editStudentDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = action.payload.message || "Student details updated successfully";
+        state.error = null;
+      })
+      .addCase(editStudentDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to edit student details";
       });
   },
 });

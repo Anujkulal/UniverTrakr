@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import AddStudent from './features/AddStudent'
 import { Button } from '@/components/ui/Button'
+import StudentsList from './features/StudentsList'
 
 const StudentScreen = () => {
-  const [mode, setMode] = useState<'add' | 'edit' | 'add-multiple'>('add')
+  const [mode, setMode] = useState<'add' | 'view' | 'add-multiple'>('add')
 
   return (
     <div className="flex flex-1 flex-col items-center justify-start py-8">
@@ -16,10 +17,10 @@ const StudentScreen = () => {
           Add Student
         </Button>
         <Button
-        variant={mode === 'edit' ? 'default' : 'outline'}
-        onClick={() => setMode("edit")}
+        variant={mode === 'view' ? 'default' : 'outline'}
+        onClick={() => setMode("view")}
         >
-          Edit Student
+          View Student
         </Button>
         <Button
         variant={mode === 'add-multiple' ? 'default' : 'outline'}
@@ -31,11 +32,12 @@ const StudentScreen = () => {
       </div>
       <div className="w-full flex justify-center">
         {mode === 'add' && <AddStudent />}
-        {mode === 'edit' && (
-          <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg text-center">
-            <h2 className="text-2xl font-bold text-indigo-700 mb-4">Edit Student (Coming Soon)</h2>
-            {/* Implement edit student form here */}
-          </div>
+        {mode === 'view' && (
+          // <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg text-center">
+          //   <h2 className="text-2xl font-bold text-indigo-700 mb-4">view Student (Coming Soon)</h2>
+          //   {/* Implement view student form here */}
+          // </div>
+          <StudentsList />
         )}
         {mode === 'add-multiple' && (
           <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg text-center">

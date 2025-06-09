@@ -8,6 +8,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement>
 };
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(({ label, className, ...props }, ref) => {
+  
   return (
     <div>
         <label className="block text-gray-700 font-semibold mb-1" htmlFor={props.id || props.name}>

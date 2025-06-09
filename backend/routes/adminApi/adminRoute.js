@@ -32,6 +32,13 @@ router.post("/auth/logout", adminLogoutController);
 router.get("/me", authenticate, roleOnly("Admin"), getMyDetailsController);
 router.put("/me/password", authenticate, roleOnly("Admin"), updateAdminLoggedInPasswordController);
 
+// Student management (by Admin)
+router.post("/students", authenticate, roleOnly("Admin"), upload.single("profile"), addStudentDetailsController);      // Add student
+router.get("/students", authenticate, roleOnly("Admin"), getAllStudentDetailsController);                              // Get all students
+router.get("/students/:enrollmentNo", authenticate, roleOnly("Admin"), getStudentByIdDetailsController);               // Get student by enrollmentNo
+router.put("/students/:userId/password", authenticate, roleOnly("Admin"), updateSelectedStudentPasswordController);    // Update student password
+router.put("/students/:enrollmentNo", authenticate, roleOnly("Admin"), upload.single("profile"), updateStudentDetailsController);    // Update student details
+
 // Admin - admin management
 router.post("/", authenticate, upload.single("profile"), roleOnly("Admin"), addAdminDetailsController);  // Create admin
 router.get("/", authenticate, roleOnly("Admin"), getAllAdminDetailsController);                         // Get all admins
@@ -39,11 +46,5 @@ router.get("/:adminId", authenticate, roleOnly("Admin"), getAdminByIdDetailsCont
 router.put("/:adminId", authenticate, roleOnly("Admin"), upload.single("profile"), updateAdminDetailsController);  // Update admin
 router.put("/:userId/password", authenticate, roleOnly("Admin"), updateSelectedAdminPasswordController); // Update another admin's password
 
-// Student management (by Admin)
-router.post("/students", authenticate, roleOnly("Admin"), upload.single("profile"), addStudentDetailsController);      // Add student
-router.get("/students", authenticate, roleOnly("Admin"), getAllStudentDetailsController);                              // Get all students
-router.get("/students/:enrollmentNo", authenticate, roleOnly("Admin"), getStudentByIdDetailsController);               // Get student by enrollmentNo
-router.put("/students/:userId/password", authenticate, roleOnly("Admin"), updateSelectedStudentPasswordController);    // Update student password
-router.put("/students/:enrollmentNo", authenticate, roleOnly("Admin"), upload.single("profile"), updateStudentDetailsController);    // Update student details
 
 export default router;

@@ -14,7 +14,7 @@ import {
   FaListAlt,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { logout } from "@/redux/slices/authSlice";
+import { clearAuth, logout } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/redux/store";
 import { Button } from "../ui/Button";
@@ -64,6 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role = "student" }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    dispatch(clearAuth())
     dispatch(logout({ role: auth.role.toLowerCase() }));
     navigate("/signin");
   };

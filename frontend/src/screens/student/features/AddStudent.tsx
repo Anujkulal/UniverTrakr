@@ -31,6 +31,8 @@ const AddStudent = () => {
     if (name === 'profile' && files && files[0]) {
       setForm({ ...form, profile: files[0] })
       setPreview(URL.createObjectURL(files[0]))
+      // console.log("Profile Image: ", files[0])
+      // console.log("Preview URL: ", URL.createObjectURL(files[0]))
     } else {
       setForm({ ...form, [name]: value })
     }
@@ -39,14 +41,15 @@ const AddStudent = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const formData = new FormData()
+    console.log("Submitting Form Data: ", formData)
     Object.entries(form).forEach(([key, value]) => {
       if (value !== null) formData.append(key, value as any)
     })
     // For initial registration, password is same as usn
-    formData.append('password', form.enrollmentNo)
+    // formData.append('password', form.enrollmentNo)
 
-    console.log("Form: ", form)
-    console.log('Form Data:', formData)
+    // console.log("Form: ", form)
+    // console.log('Form Data:', formData)
 
     dispatch(addStudentDetails(formData))
     setForm(initialState)

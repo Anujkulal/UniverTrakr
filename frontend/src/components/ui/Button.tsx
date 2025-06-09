@@ -12,6 +12,7 @@ const buttonVariants = cva(
       variant: {
         default: 'bg-gradient-to-r from-blue-500 to-blue-700 text-white hover:bg-blue-700',
         outline: 'border border-gray-300 text-gray-700 bg-gray-200 hover:bg-gray-50',
+        plain: 'bg-transparent text-gray-700 hover:bg-gray-100',
         icon: 'bg-gray-200 hover:bg-gray-50 text-gray-500 text-4xl',
         destructive: 'bg-gradient-to-r from-red-500 to-red-700 text-white hover:bg-red-700 focus:ring-red-500',
         success: 'bg-gradient-to-r from-green-500 to-green-700 text-white hover:bg-green-700 focus:ring-green-500',

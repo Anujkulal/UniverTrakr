@@ -10,6 +10,7 @@ import { login } from "@/redux/slices/authSlice";
 import MessageBar from "@/components/ui/MessageBar";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa6";
+import { MdArrowBackIos } from "react-icons/md";
 
 const roles = [{ value: "admin" }, { value: "faculty" }, { value: "student" }];
 
@@ -75,6 +76,12 @@ const Signin = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
+        <Button
+        variant={"plain"}
+        onClick={() => navigate("/")}>
+          <MdArrowBackIos size={20} className="mr-2" />
+          {/* Back */}
+        </Button>
         <H2 className="text-blue-700">Sign In</H2>
         <div className="flex justify-center mb-6 space-x-4">
           {roles.map((r) => (
@@ -100,7 +107,7 @@ const Signin = () => {
               id="email"
               name="email"
               type="text"
-              label="Email"
+              label="User ID"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
