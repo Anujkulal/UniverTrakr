@@ -45,8 +45,6 @@ const AddStudent = () => {
     Object.entries(form).forEach(([key, value]) => {
       if (value !== null) formData.append(key, value as any)
     })
-    // For initial registration, password is same as usn
-    // formData.append('password', form.enrollmentNo)
 
     // console.log("Form: ", form)
     // console.log('Form Data:', formData)

@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { editStudentDetails, clearStudentState } from '@/redux/slices/studentSlice';
 import { Input } from '@/components/ui/Input';
-import MessageBar from '@/components/ui/MessageBar';
 import H2 from '@/components/ui/H2';
 import { FaTimesCircle } from "react-icons/fa";
 
@@ -24,7 +23,7 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onClose, fetchStuden
   const [form, setForm] = useState({ ...student })
   const [preview, setPreview] = useState<string | null>(null)
   // const [loading, setLoading] = useState(false)
-  const {loading, error, success } = useSelector((state: RootState) => state.student)
+  const {loading } = useSelector((state: RootState) => state.student)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, files } = e.target as any
@@ -63,65 +62,6 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onClose, fetchStuden
   }
 
   return (
-    // <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md relative">
-    //   <button
-    //     className="absolute top-2 right-4 text-2xl text-gray-400 hover:text-red-500"
-    //     onClick={() => onClose()}
-    //   >
-    //     &times;
-    //   </button>
-    //   <h2 className="text-xl font-bold mb-4 text-indigo-700">Edit Student</h2>
-    //   <form onSubmit={handleSubmit} className="space-y-4">
-    //     <input
-    //       type="text"
-    //       name="firstName"
-    //       value={form.firstName}
-    //       onChange={handleChange}
-    //       className="w-full px-4 py-2 border rounded"
-    //       placeholder="First Name"
-    //       required
-    //     />
-    //     <input
-    //       type="text"
-    //       name="middleName"
-    //       value={form.middleName || ''}
-    //       onChange={handleChange}
-    //       className="w-full px-4 py-2 border rounded"
-    //       placeholder="Middle Name"
-    //     />
-    //     <input
-    //       type="text"
-    //       name="lastName"
-    //       value={form.lastName}
-    //       onChange={handleChange}
-    //       className="w-full px-4 py-2 border rounded"
-    //       placeholder="Last Name"
-    //       required
-    //     />
-    //     <input
-    //       type="text"
-    //       name="enrollmentNo"
-    //       value={form.enrollmentNo}
-    //       onChange={handleChange}
-    //       className="w-full px-4 py-2 border rounded"
-    //       placeholder="Enrollment No"
-    //       required
-    //     />
-    //     <input
-    //       type="text"
-    //       name="branch"
-    //       value={form.branch}
-    //       onChange={handleChange}
-    //       className="w-full px-4 py-2 border rounded"
-    //       placeholder="Branch"
-    //       required
-    //     />
-    //     <Button type="submit" className="w-full" disabled={loading}>
-    //       {loading ? 'Saving...' : 'Save Changes'}
-    //     </Button>
-    //   </form>
-    // </div>
-
     <form
       className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg space-y-5"
       onSubmit={handleSubmit}
@@ -134,7 +74,6 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onClose, fetchStuden
         <FaTimesCircle size={20} />
       </Button>
       <H2 className='text-blue-700'>Edit Student</H2>
-      {/* <MessageBar variant={error ? "error" : success ? "success" : "default"} message={error || success || ''} onClose={() => onClose()}/> */}
       <div className="flex gap-4">
         <Input
           type='text'

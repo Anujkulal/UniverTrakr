@@ -126,7 +126,6 @@ const StudentsList = () => {
                           <div className="flex flex-col gap-2">
                             {student.profile && (
                               <div>
-                                {/* <span className="font-semibold">Profile Image:</span> */}
                                 <img
                                   src={`${base_url}/media/student/${student.profile}?v=${student.updatedAt || Date.now()}`} 
                                   // Force the image to reload by appending a cache-busting query string (e.g., a timestamp or Date.now()) to the image URL.
