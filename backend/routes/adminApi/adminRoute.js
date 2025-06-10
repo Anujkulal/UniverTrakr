@@ -12,6 +12,7 @@ import {
   updateSelectedAdminPasswordController,
 } from "../../controllers/adminController.js";
 import {
+  addMultipleStudentsController,
   addStudentDetailsController,
   deleteStudentController,
   getAllStudentDetailsController,
@@ -36,6 +37,7 @@ router.put("/me/password", authenticate, roleOnly("Admin"), updateAdminLoggedInP
 
 // Student management (by Admin)
 router.post("/students", authenticate, roleOnly("Admin"), upload.single("profile"), addStudentDetailsController);      // Add student
+router.post("/students/bulk", authenticate, roleOnly("Admin"), addMultipleStudentsController);
 router.get("/students", authenticate, roleOnly("Admin"), getAllStudentDetailsController);                              // Get all students
 router.get("/students/:enrollmentNo", authenticate, roleOnly("Admin"), getStudentByIdDetailsController);               // Get student by enrollmentNo
 router.put("/students/:userId/password", authenticate, roleOnly("Admin"), updateSelectedStudentPasswordController);    // Update student password

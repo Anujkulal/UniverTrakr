@@ -197,10 +197,85 @@ const addStudentDetailsController = async (req, res) => {
   }
 }
 
+const addMultipleStudentsController = async (req, res) => {
+  const { students } = req.body;
+  try {
+    // Validate input
+    if (!students || !Array.isArray(students) || students.length === 0) {
+      return res.status(400).json({ success: false, message: "Invalid student data" });
+    }
+
+    // Filter out invalid students (missing required fields)
+    const validStudents = students.filter(
+      student =>
+        student.enrollmentNo &&
+        student.enrollmentNo.trim() !== "" &&
+        student.email &&
+        student.email.trim() !== ""
+    );
+
+    // console.log("Valid Students: ", validStudents);
+
+    if (validStudents.length === 0) {
+      return res.status(400).json({ success: false, message: "No valid student data provided" });
+    }
+
+    // Check for duplicates in DB
+    const enrollmentNos = validStudents.map(s => s.enrollmentNo);
+    const emails = validStudents.map(s => s.email);
+
+    // console.log("Enrollment Nos: ", enrollmentNos);
+    // console.log("Emails: ", emails);
+
+    const existingStudents = await StudentModel.find({
+      $or: [
+        { enrollmentNo: { $in: enrollmentNos } },
+        { email: { $in: emails } }
+      ]
+    });
+
+    // console.log("Existing Students: ", existingStudents);
+
+    if (existingStudents.length > 0) {
+      const duplicateNos = existingStudents.map(s => s.enrollmentNo);
+      const duplicateEmails = existingStudents.map(s => s.email);
+      // console.log("Duplicate Enrollment Nos: ", duplicateNos);
+      // console.log("Duplicate Emails: ", duplicateEmails);
+      return res.status(409).json({
+        success: false,
+        message: `Duplicate students found. EnrollmentNos: [${duplicateNos.join(", ")}], Emails: [${duplicateEmails.join(", ")}]`
+      });
+    }
+
+    // Insert student details
+    const insertedStudents = await StudentModel.insertMany(validStudents);
+
+    // Create student credentials (password = enrollmentNo)
+    const credentials = await Promise.all(
+      validStudents.map(async student => {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(student.enrollmentNo, salt);
+        return {
+          userId: student.enrollmentNo,
+          password: hashedPassword,
+          role: "Student"
+        };
+      })
+    );
+
+    await UserModel.insertMany(credentials);
+
+    res.json({ success: true, message: "Students added successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 const getAllStudentDetailsController = async (req, res) => {
   try{
     const students = await StudentModel.find({});
-    if(!students){
+    if(!students || students.length === 0){
       return res.status(404).json({message: "Students not found"})
     }
     return res.status(200).json({message: "Students found", students});
@@ -283,6 +358,7 @@ export {
     updateStudentLoggedInPasswordController,
     updateSelectedStudentPasswordController,
     addStudentDetailsController,
+    addMultipleStudentsController,
     getAllStudentDetailsController,
     getStudentByIdDetailsController,
     getStudentMyDetailsController,

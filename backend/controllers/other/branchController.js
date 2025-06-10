@@ -7,11 +7,14 @@ const addBranchController = async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        const existingBranchName = await BranchModel.findOne({name});
-        const existingBranchCode = await BranchModel.findOne({code});
-        // console.log("existingBranch", existingBranchCode);
+        // const existingBranchName = await BranchModel.findOne({name});
+        // const existingBranchCode = await BranchModel.findOne({code});
+        const existingBranch = await BranchModel.findOne({
+            $or: [{name}, {code}]
+        })
+        console.log("existingBranch", existingBranch);
         // Check if branch with same name or code already exists
-        if(existingBranchName || existingBranchCode){
+        if(existingBranch){
             return res.status(400).json({ message: "Branch already exists" });
         }
 
