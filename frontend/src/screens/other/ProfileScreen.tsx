@@ -11,6 +11,7 @@ import { extractDate } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import EditProfile from "./features/EditProfile";
 import MessageBar from "@/components/ui/MessageBar";
+import ChangePassword from "./features/ChangePassword";
 
 const backend_url = baseUrl();
 const base_url = backend_url.replace("/api", "");
@@ -23,6 +24,7 @@ const ProfileScreen = () => {
   // console.log('User from localStorage:', auth);
 
   const [editProfile, setEditProfile] = useState<object>();
+  const [changePassword, setChangePassword] = useState<object>();
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
 
@@ -35,6 +37,9 @@ const ProfileScreen = () => {
     phoneNumber: "",
     email: "",
     userId: "",
+    adminId: "",
+    enrollmentNo: "",
+    facultyId: "",
     role: auth?.role?.toLowerCase(),
     profile:"",
     department: "",
@@ -55,7 +60,7 @@ const ProfileScreen = () => {
   const fetchCurrUser = async () => {
     try {
       const response = await axios.get(`${backend_url}/${auth.role}/me`, {withCredentials: true});
-      console.log('Current user data:', response);
+      console.log('Response user data:', response);
       // console.log("Role from auth:", auth.role);
       
       setUser(prev => ({
@@ -67,7 +72,10 @@ const ProfileScreen = () => {
         gender: response.data.user?.gender,
         phoneNumber: response.data.user?.phoneNumber,
         email: response.data.user.email,
-        userId: response.data.user.adminId || response.data.user.enrollmentNo || response.data.user.enrollmentNo, // Use adminId if available, else userId
+        userId: response.data.user.adminId || response.data.user.enrollmentNo || response.data.user.facultyId, // Use adminId if available, else userId
+        adminId: response.data?.user?.adminId || "",
+        enrollmentNo: response.data?.user?.enrollmentNo || "",
+        facultyId: response.data?.user?.facultyId || "",
         role: auth?.role?.toLowerCase(),
         profile: response.data.user.profile || "",
         department: response.data.user.branch || "Nil",
@@ -83,22 +91,6 @@ const ProfileScreen = () => {
     }
   }, [])
 
-  // const fetchCurrUser = async () => {
-  //   const response = await axios.get(`${backend_url}/${auth.role}/me`);
-  //   // console.log('Current user data:', response);
-  //   user.name = `${response.data.user.firstname} ${response.data.user.middlename} ${response.data.user.lastname}`;
-  // };
-  // fetchCurrUser();
-  
-  // Dummy user data for UI demonstration
-  // const user = {
-  //   name: "",
-  //   email: auth?.userId,
-  //   role: auth?.role?.toLowerCase(),
-  //   department: "Computer Science",
-  //   joined: "2023-08-15",
-  // };
-
   // Prevent rendering if not authenticated
   if (!auth || !auth.userId) return null;
 
@@ -109,6 +101,13 @@ const ProfileScreen = () => {
     }
   }
 
+  const handleChangePassword = () => {
+    if(user.name.trim().length > 0){
+      // console.log('User data:', user);
+      setChangePassword(user);
+    }
+  }
+
   const handleCloseEdit = (updated?: boolean) => {
     setEditProfile(undefined);
     if (updated) {
@@ -116,6 +115,10 @@ const ProfileScreen = () => {
       setMessage({ type: 'success', text: 'Profile updated successfully!' });
     }
   };
+
+  const handleCloseChangePassword = (updated?: boolean) => {
+    setChangePassword(undefined);
+  }
 
   return (
     // <div className="flex min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
@@ -147,11 +150,20 @@ const ProfileScreen = () => {
             </div>
           </div>
 
-          <Button
-          onClick={handleEditProfile}
-          >
-            Edit Profile
-          </Button>
+          <div className="w-full flex justify-between mt-6">
+            <Button
+            variant={"success"}
+            onClick={handleEditProfile}
+            >
+              Edit Profile
+            </Button>
+            <Button
+            variant={"outline"}
+            onClick={handleChangePassword}
+            >
+              Change Password
+            </Button>
+          </div>
         </div>
         <AnimatePresence>
           { editProfile && (
@@ -170,6 +182,19 @@ const ProfileScreen = () => {
               />
             </motion.div>
           )}
+          {
+            changePassword && (
+              <motion.div
+              className="fixed inset-0 bg-black/40 bg-opacity-50 flex items-center justify-center z-50"
+              initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+              >
+                <ChangePassword user={changePassword} onClose={handleCloseChangePassword} setMessage={setMessage} />
+              </motion.div>
+            )
+          }
         </AnimatePresence>
       </div>
     // </div>

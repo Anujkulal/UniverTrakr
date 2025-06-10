@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { baseUrl } from '@/lib/baseUrl'
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +7,7 @@ import { editStudentDetails, clearStudentState } from '@/redux/slices/studentSli
 import { Input } from '@/components/ui/Input';
 import H2 from '@/components/ui/H2';
 import { FaTimesCircle } from "react-icons/fa";
+import axios from 'axios';
 
 
 const backend_url = baseUrl();
@@ -18,12 +19,21 @@ interface EditStudentProps {
   setMessage: (msg: { type: 'success' | 'error'; text: string }) => void
 }
 
+interface BranchProps {
+    name: string;
+    code: string;
+}
+
 const EditStudent: React.FC<EditStudentProps> = ({ student, onClose, fetchStudents, setMessage }) => {
   const dispatch = useDispatch<AppDispatch>()
   const [form, setForm] = useState({ ...student })
   const [preview, setPreview] = useState<string | null>(null)
   // const [loading, setLoading] = useState(false)
   const {loading } = useSelector((state: RootState) => state.student)
+  const [branches, setBranches] = useState<BranchProps[]>([])
+
+  const auth = JSON.parse(localStorage.getItem("user") || "{}");
+  // console.log('User from localStorage:', auth);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, files } = e.target as any
@@ -46,7 +56,7 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onClose, fetchStuden
       }
     });
 
-    dispatch(editStudentDetails({ formData, enrollmentNo: form.enrollmentNo }))
+    dispatch(editStudentDetails({ formData, role: auth.role.toLowerCase(), enrollmentNo: form.enrollmentNo }))
     .unwrap()
     .then((res) => {
       setMessage({type: "success", text: res.message || "Student details updated successfully"});
@@ -60,6 +70,21 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onClose, fetchStuden
     setMessage({ type: 'error', text: err || 'Failed to update student' });
   });
   }
+
+  const fetchBranch = async () => {
+        try {
+            const response = await axios.get(`${backend_url}/${auth.role.toLowerCase()}/branch`, { withCredentials: true})
+            setBranches(response.data.branch || [])
+            console.log('Fetched branches:', response.data.branch)
+        } catch (err) {
+            console.error('Failed to fetch branch:', err)
+        }
+    }
+
+    useEffect(() => {
+        if(auth && auth.role)
+            fetchBranch();
+    }, [])
 
   return (
     <form
@@ -142,14 +167,23 @@ const EditStudent: React.FC<EditStudentProps> = ({ student, onClose, fetchStuden
         </select>
       </div>
       <div className="flex gap-4">
-        <Input
-          type="text"
+        <select
           name="branch"
-          placeholder="Branch"
           value={form.branch}
           onChange={handleChange}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
           required
-        />
+        >
+          <option value="">Branch</option>
+          {
+            branches.map((branch) => (
+              <option key={branch.code} value={branch.code}>
+                {branch.name} ({branch.code})
+              </option>
+            ))
+          }          
+        </select>
+
         <select
           name="gender"
           value={form.gender}

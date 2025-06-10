@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
     // cb(null, "./media");
     let folder = "media";
 
-    if (req.body?.adminId || req.body?.userId) {
+    if (req.body?.adminId) {
       folder = "media/admin";
     } else if (req.body?.facultyId) {
       folder = "media/faculty";
@@ -24,8 +24,8 @@ const storage = multer.diskStorage({
     //     filename = `Timetable_${req.body.semester}_Semester_${req.body.branch}.png`;
     // }
     // else if (req.body?.type === "profile"){
-    if (req.body?.adminId || req.body?.userId) {
-      filename = `admin_profile_${req.body.adminId || req.body?.userId}.png`;
+    if (req.body?.adminId) {
+      filename = `admin_profile_${req.body.adminId}.png`;
     } else if (req.body?.facultyId) {
       filename = `faculty_profile_${req.body.facultyId}.png`;
     } else if (req.body?.enrollmentNo) {

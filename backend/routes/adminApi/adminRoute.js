@@ -21,6 +21,7 @@ import {
 } from "../../controllers/studentController.js";
 import { authenticate, roleOnly } from "../../middlewares/authenticate.js";
 import upload from "../../middlewares/multerMiddleware.js";
+import { addBranchController, getAllBranchController, removeBranchController } from "../../controllers/other/branchController.js";
 
 const router = express.Router();
 
@@ -41,12 +42,18 @@ router.put("/students/:userId/password", authenticate, roleOnly("Admin"), update
 router.put("/students/:enrollmentNo", authenticate, roleOnly("Admin"), upload.single("profile"), updateStudentDetailsController);    // Update student details
 router.delete("/students/:enrollmentNo", authenticate, roleOnly("Admin"), deleteStudentController)
 
+// Branch management (by Admin)
+router.post("/branch", authenticate, roleOnly("Admin"), addBranchController)
+router.get("/branch", authenticate, roleOnly("Admin"), getAllBranchController)
+router.delete("/branch/:branchCode", authenticate, roleOnly("Admin"), removeBranchController);
+
 // Admin - admin management
 router.post("/", authenticate, upload.single("profile"), roleOnly("Admin"), addAdminDetailsController);  // Create admin
 router.get("/", authenticate, roleOnly("Admin"), getAllAdminDetailsController);                         // Get all admins
 router.get("/:adminId", authenticate, roleOnly("Admin"), getAdminByIdDetailsController);                // Get admin by ID
 router.put("/:adminId", authenticate, roleOnly("Admin"), upload.single("profile"), updateAdminDetailsController);  // Update admin
 router.put("/:userId/password", authenticate, roleOnly("Admin"), updateSelectedAdminPasswordController); // Update another admin's password
+
 
 
 export default router;

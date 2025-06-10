@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router";
 import ProfileScreen from "./ProfileScreen";
 import StudentScreen from "../student/StudentScreen";
+import BranchScreen from "./BranchScreen";
 
 const HomeScreen = () => {
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
@@ -24,6 +25,7 @@ const HomeScreen = () => {
       <Routes>
           <Route index path="profile" element={<ProfileScreen />} />
           <Route path="student" element={<StudentScreen />} />
+          <Route path="branch" element={<BranchScreen />} />
           {/* <Route index path="profile" element={<ProfileScreen />} />
           <Route index path="profile" element={<ProfileScreen />} /> */}
       </Routes>

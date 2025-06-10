@@ -1,11 +1,15 @@
 import { Button } from '@/components/ui/Button'
 import H2 from '@/components/ui/H2'
 import { Input } from '@/components/ui/Input'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addStudentDetails, clearStudentState } from '@/redux/slices/studentSlice'
 import type { RootState, AppDispatch } from '@/redux/store'
 import MessageBar from '@/components/ui/MessageBar'
+import axios from 'axios'
+import { baseUrl } from '@/lib/baseUrl'
+
+const backend_url = baseUrl();
 
 const initialState = {
   firstName: '',
@@ -20,11 +24,20 @@ const initialState = {
   profile: null as File | null,
 }
 
+interface BranchProps {
+    name: string;
+    code: string;
+}
+
 const AddStudent = () => {
   const [form, setForm] = useState(initialState)
   const [preview, setPreview] = useState<string | null>(null)
   const dispatch = useDispatch<AppDispatch>()
+  const [branches, setBranches] = useState<BranchProps[]>([])
   const { loading, error, success } = useSelector((state: RootState) => state.student)
+
+  const auth = JSON.parse(localStorage.getItem("user") || "{}");
+  // console.log('User from localStorage:', auth);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, files } = e.target as any
@@ -49,10 +62,25 @@ const AddStudent = () => {
     // console.log("Form: ", form)
     // console.log('Form Data:', formData)
 
-    dispatch(addStudentDetails(formData))
+    dispatch(addStudentDetails({formData, role: auth.role.toLowerCase()}))
     setForm(initialState)
     setPreview(null)
   }
+
+    const fetchBranch = async () => {
+        try {
+            const response = await axios.get(`${backend_url}/${auth.role.toLowerCase()}/branch`, { withCredentials: true})
+            setBranches(response.data.branch || [])
+            console.log('Fetched branches:', response.data.branch)
+        } catch (err) {
+            console.error('Failed to fetch branch:', err)
+        }
+    }
+
+    useEffect(() => {
+        if(auth && auth.role)
+            fetchBranch();
+    }, [])
 
   return (
     <form
@@ -128,14 +156,24 @@ const AddStudent = () => {
         </select>
       </div>
       <div className="flex gap-4">
-        <Input
-          type="text"
+        
+        <select
           name="branch"
-          placeholder="Branch"
           value={form.branch}
           onChange={handleChange}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
           required
-        />
+        >
+          <option value="">Branch</option>
+          {
+            branches.map((branch) => (
+              <option key={branch.code} value={branch.code}>
+                {branch.name} ({branch.code})
+              </option>
+            ))
+          }          
+        </select>
+
         <select
           name="gender"
           value={form.gender}

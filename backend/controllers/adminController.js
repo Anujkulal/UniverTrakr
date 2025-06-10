@@ -265,6 +265,10 @@ const updateAdminDetailsController = async (req, res) => {
       updates.profile = req.file.filename;
     }    
 
+    // updates.adminId  = updates.userId;
+
+    console.log("Updates in adminController::: ", updates)
+
     const updatedAdmin = await AdminModel.findOneAndUpdate({adminId}, {$set: updates}, {new: true});
 
     if(!updatedAdmin){

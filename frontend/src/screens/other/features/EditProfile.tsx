@@ -36,7 +36,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onClose, setMessage, fe
     }
   }
 
-  // console.log("user gender:::", form.gender)
+  // console.log("user role:::", user.role)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     // console.log("Submitting Form Data: ", form)
@@ -48,7 +48,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onClose, setMessage, fe
       }
     });
 
-    dispatch(editProfile({ formData, userId: user.userId, role: user.role }))
+    dispatch(editProfile({ formData, userId: form.userId, role: form.role }))
     .unwrap()
     .then((res) => {
       setMessage({type: "success", text: res.message || "Profile updated successfully"});
@@ -72,7 +72,8 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onClose, setMessage, fe
       <Button
       type='button'
         onClick={() => onClose()}
-      variant={"plain"}>
+      variant={"plain"}
+      className='hover:text-red-600'>
         <FaTimesCircle size={20} />
       </Button>
       <H2 className='text-blue-700'>Edit Profile</H2>
@@ -142,30 +143,9 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onClose, setMessage, fe
           <option value="female">Female</option>
           <option value="other">Other</option>
         </select>
-        {/* <select
-          name="semester"
-          value={form.semester}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
-          required
-        >
-          <option value="">Semester</option>
-          {[...Array(8)].map((_, i) => (
-            <option key={i + 1} value={i + 1}>{i + 1}</option>
-          ))}
-        </select> */}
-      </div>
-      {/* <div className="flex gap-4">
-        <Input
-          type="text"
-          name="branch"
-          placeholder="Branch"
-          value={form.branch}
-          onChange={handleChange}
-          required
-        />
         
-      </div> */}
+      </div>
+      
       <div className="flex flex-col items-center">
         <label className="mb-2 font-medium text-gray-700">Profile Image</label>
         <Input

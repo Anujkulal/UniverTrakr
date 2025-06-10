@@ -18,14 +18,12 @@ const initialState: StudentState = {
 
 // Thunk to add student details and register student in one go
 export const addStudentDetails = createAsyncThunk<
-  any,
-  FormData,
-  { rejectValue: string }
->("student/addStudentDetails", async (formData, { rejectWithValue }) => {
+  any, {formData: FormData; role: string;}, { rejectValue: string }
+>("student/addStudentDetails", async ({formData, role}, { rejectWithValue }) => {
   try {
     // 1. Add student details (profile, etc.)
     const detailsRes = await axios.post(
-      `${backend_url}/admin/students`,
+      `${backend_url}/${role}/students`,
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -62,12 +60,12 @@ export const addStudentDetails = createAsyncThunk<
 });
 
 export const editStudentDetails = createAsyncThunk
-< any, {formData: FormData; enrollmentNo: string}, {rejectValue: string}
+< any, {formData: FormData; role: string; enrollmentNo: string}, {rejectValue: string}
 >("student/editStudentDetails", 
-  async ({formData, enrollmentNo}, {rejectWithValue}) => {
+  async ({formData, role, enrollmentNo}, {rejectWithValue}) => {
   try {
     const response = await axios.put(
-      `${backend_url}/admin/students/${enrollmentNo}`,
+      `${backend_url}/${role}/students/${enrollmentNo}`,
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },
