@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { baseUrl } from "@/lib/baseUrl";
+import Papa from "papaparse";
 
 const backend_url = baseUrl();
 
@@ -59,6 +60,60 @@ export const addStudentDetails = createAsyncThunk<
   }
 });
 
+export const addMultipleStudents = createAsyncThunk<
+  any, {file: File, role: string}, { rejectValue: string }>
+  ("student/addMultipleStudents", async ({file, role}, {rejectWithValue}) => {
+    try {
+      // Await Papa.parse using a Promise wrapper
+      const students: Array<{
+      enrollmentNo: string;
+      firstName: string;
+      middleName?: string;
+      lastName: string;
+      email: string;
+      phoneNumber: string;
+      semester: string;
+      branch: string;
+      gender: string;
+    }> = await new Promise((resolve, reject) => {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => resolve(results.data as any),
+        error: (err) => reject(err),
+      });
+    });
+
+    // Optionally filter out empty/invalid rows
+    const validStudents = students.filter(
+      (s) =>
+        s.enrollmentNo &&
+        s.firstName &&
+        s.lastName &&
+        s.email &&
+        s.phoneNumber &&
+        s.semester &&
+        s.branch &&
+        s.gender
+    );
+
+    if (validStudents.length === 0) {
+      return rejectWithValue("No valid students found in the file.");
+    }
+
+    const response = await axios.post(
+      `${backend_url}/${role}/students/bulk`,
+      { students: validStudents },
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to add multiple students"
+    );
+  }
+  })
+
 export const editStudentDetails = createAsyncThunk
 < any, {formData: FormData; role: string; enrollmentNo: string}, {rejectValue: string}
 >("student/editStudentDetails", 
@@ -105,6 +160,20 @@ const studentSlice = createSlice({
       .addCase(addStudentDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to add and register student";
+      })
+      .addCase(addMultipleStudents.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = null;
+      })
+      .addCase(addMultipleStudents.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = action.payload.message || "Multiple students added successfully";
+        state.error = null;
+      })
+      .addCase(addMultipleStudents.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to add multiple students";
       })
       .addCase(editStudentDetails.pending, (state) => {
         state.loading = true;

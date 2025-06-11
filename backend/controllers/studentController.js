@@ -275,10 +275,10 @@ const addMultipleStudentsController = async (req, res) => {
 const getAllStudentDetailsController = async (req, res) => {
   try{
     const students = await StudentModel.find({});
-    if(!students || students.length === 0){
-      return res.status(404).json({message: "Students not found"})
-    }
-    return res.status(200).json({message: "Students found", students});
+
+    return res.status(200).json({
+      message: students.length > 0 ? "Students found" : "No students found", students
+    });
   } catch(error){
     console.error("Error while fetching all student details:", error);
     res.status(500).json({ message: "Server error" });
@@ -305,7 +305,7 @@ const getStudentMyDetailsController = async (req, res) => {
   try{
     const user = await StudentModel.findOne({enrollmentNo: req.user.userId})
     if(!user){
-      return res.status(404).json({message: "User not found"})
+      return res.status(200).json({message: "User not found"})
     }
 
     return res.status(200).json({message: "User found", user})

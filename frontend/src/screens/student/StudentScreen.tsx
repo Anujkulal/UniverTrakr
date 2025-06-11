@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import AddStudent from './features/AddStudent'
 import { Button } from '@/components/ui/Button'
 import StudentsList from './features/StudentsList'
+import AddMultipleStudent from './features/AddMultipleStudent'
 
 const StudentScreen = () => {
   const [mode, setMode] = useState<'add' | 'view' | 'add-multiple'>('add')
@@ -32,18 +33,12 @@ const StudentScreen = () => {
       </div>
       <div className="w-full flex justify-center">
         {mode === 'add' && <AddStudent />}
-        {mode === 'view' && (
+        {mode === 'view' && ( <StudentsList /> )}
+        {mode === 'add-multiple' && ( <AddMultipleStudent />
           // <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg text-center">
-          //   <h2 className="text-2xl font-bold text-indigo-700 mb-4">view Student (Coming Soon)</h2>
-          //   {/* Implement view student form here */}
+          //   <h2 className="text-2xl font-bold text-indigo-700 mb-4">Add Multiple Students (Coming Soon)</h2>
+          //   {/* Implement add multiple students form here */}
           // </div>
-          <StudentsList />
-        )}
-        {mode === 'add-multiple' && (
-          <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg text-center">
-            <h2 className="text-2xl font-bold text-indigo-700 mb-4">Add Multiple Students (Coming Soon)</h2>
-            {/* Implement add multiple students form here */}
-          </div>
         )}
       </div>
     </div>
