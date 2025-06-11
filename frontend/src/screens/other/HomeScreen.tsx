@@ -4,6 +4,8 @@ import { Route, Routes, useNavigate } from "react-router";
 import ProfileScreen from "./ProfileScreen";
 import StudentScreen from "../student/StudentScreen";
 import BranchScreen from "./BranchScreen";
+import NoticeScreen from "./NoticeScreen";
+import FacultyScreen from "../faculty/FacultyScreen";
 
 const HomeScreen = () => {
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
@@ -25,7 +27,9 @@ const HomeScreen = () => {
       <Routes>
           <Route index path="profile" element={<ProfileScreen />} />
           <Route path="student" element={<StudentScreen />} />
+          <Route path="faculty" element={<FacultyScreen />} />
           <Route path="branch" element={<BranchScreen />} />
+          <Route path="notice" element={<NoticeScreen />} />
           {/* <Route index path="profile" element={<ProfileScreen />} />
           <Route index path="profile" element={<ProfileScreen />} /> */}
       </Routes>

@@ -1,104 +1,104 @@
-import React, { useEffect, useState } from "react";
-import { FaChevronDown, FaChevronUp, FaEdit } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
-import axios from "axios";
-import { baseUrl } from "@/lib/baseUrl";
-import { Button } from "@/components/ui/Button";
-import { motion, AnimatePresence } from "framer-motion";
-import H2 from "@/components/ui/H2";
-import EditStudent from "./EditStudent";
-import MessageBar from "@/components/ui/MessageBar";
-import { Input } from "@/components/ui/Input";
+import { Button } from '@/components/ui/Button';
+import H2 from '@/components/ui/H2';
+import { Input } from '@/components/ui/Input';
+import MessageBar from '@/components/ui/MessageBar';
+import { baseUrl } from '@/lib/baseUrl';
+import axios from 'axios';
+import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from 'react'
+import { FaChevronDown, FaChevronUp, FaEdit } from 'react-icons/fa';
+import { MdDeleteForever } from 'react-icons/md';
+import EditFaculty from './EditFaculty';
 
 const backend_url = baseUrl();
 const base_url = backend_url.replace("/api", "");
 
-interface Student {
+interface Faculty {
   _id: string;
   firstName: string;
   middleName?: string;
   lastName: string;
-  enrollmentNo: string;
-  branch: string;
+  facultyId: string;
+  department: string;
   email: string;
   phoneNumber: string;
-  semester: string;
-  gender: string;
+  experience: string;
+  post: string;
   profile?: string;
   [key: string]: any;
 }
 
-const StudentsList = () => {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [expanded, setExpanded] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [editStudent, setEditStudent] = useState<Student | null>(null);
-  const [message, setMessage] = useState<{type: "success" | "error"; text: string} | null >(null);
-  const [searchTerm, setSearchTerm] = useState("");
+const FacultiesList = () => {
+    const [faculties, setFaculties] = useState<Faculty[]>([]);
+      const [expanded, setExpanded] = useState<string | null>(null);
+      const [loading, setLoading] = useState(false);
+      const [editFaculty, setEditFaculty] = useState<Faculty | null>(null);
+      const [message, setMessage] = useState<{type: "success" | "error"; text: string} | null >(null);
+      const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    fetchStudents();
-  }, []);
+      useEffect(() => {
+          fetchFaculties();
+        }, []);
 
-  const fetchStudents = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`${backend_url}/admin/students`, {
-        withCredentials: true,
-      });
-      // console.log('Fetched students:', res.data.students)
-      setStudents(res.data.students || []);
-    } catch (err) {
-      console.error("Error fetching students:", err);
-    }
-    setLoading(false);
-  };
+        const fetchFaculties = async () => {
+            setLoading(true);
+            try {
+              const res = await axios.get(`${backend_url}/admin/faculty`, {
+                withCredentials: true,
+              });
+              // console.log('Fetched faculties:', res.data.faculties)
+              setFaculties(res.data.faculties || []);
+            } catch (err) {
+              console.error("Error fetching faculty:", err);
+            }
+            setLoading(false);
+          };
 
-  const handleExpand = (id: string) => {
+          const handleExpand = (id: string) => {
     setExpanded(expanded === id ? null : id);
   };
 
-  const handleEdit = (student: Student) => {
-    setEditStudent(student);
+  const handleEdit = (faculty: Faculty) => {
+    setEditFaculty(faculty);
   };
 
   const handleCloseEdit = (updated?: boolean) => {
-    setEditStudent(null);
-    if (updated) fetchStudents(); // Refresh the list if updated
+    setEditFaculty(null);
+    if (updated) fetchFaculties(); // Refresh the list if updated
   };
 
-  const handleDelete = async (enrollmentNo: string, firstName: string, lastName: string) => {
-    if (!window.confirm(`Are you sure you want to remove student: "${firstName} ${lastName}"?`)) {
+  const handleDelete = async (facultyId: string, firstName: string, lastName: string) => {
+    if (!window.confirm(`Are you sure you want to remove Faculty: "${firstName} ${lastName}"?`)) {
       return;
     }
     try {
-      const res = await axios.delete(`${backend_url}/admin/students/${enrollmentNo}`, {
+      const res = await axios.delete(`${backend_url}/admin/faculty/${facultyId}`, {
         withCredentials: true,
       });
       setMessage({ type: "success", text: res.data.message });
-      fetchStudents();
+      fetchFaculties();
     } catch (err) {
-      console.error("Error deleting student:", err);
-      setMessage({ type: "error", text: "Failed to delete student. Please try again." });
+      console.error("Error deleting faculty:", err);
+      setMessage({ type: "error", text: "Failed to delete faculty. Please try again." });
     }
   }
 
-  const filteredStudents = students.filter((student) => {
-    return student.enrollmentNo.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
-            student.firstName.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
-            student.lastName.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
-            student.branch.toLowerCase().includes(searchTerm.trim().toLowerCase());
+  const filteredFaculty = faculties.filter((faculty) => {
+    return faculty.facultyId.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+            faculty.firstName.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+            faculty.lastName.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+            faculty.department.toLowerCase().includes(searchTerm.trim().toLowerCase());
   });
 
   return (
     <div className="w-full max-w-3xl mx-auto mt-8">
       <MessageBar variant={message?.type} message={message?.text || ''} onClose={() => setMessage(null)}/>
-      <H2 className="text-blue-700">Students List</H2>
+      <H2 className="text-blue-700">Faculty List</H2>
       <div className="mb-4">
       
         <Input
         type="search"
-        placeholder="Search by Enrollment No, Name or Branch..."
+        placeholder="Search by facultyId, Name or department..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="bg-blue-100"
@@ -106,8 +106,8 @@ const StudentsList = () => {
       </div>
       {loading ? (
         <div className="text-center py-8">Loading...</div>
-      ) : filteredStudents.length === 0 ? (
-        <span>Students not found!</span>
+      ) : filteredFaculty.length === 0 ? (
+        <span>Faculty not found!</span>
       ) : (
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
         {/* <input type="search" name="" id="" placeholder="search here..."/> */}
@@ -115,27 +115,27 @@ const StudentsList = () => {
             <thead className="bg-blue-200">
               <tr>
                 <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3">Enrollment No</th>
-                <th className="px-4 py-3">Branch</th>
+                <th className="px-4 py-3">FacultyId</th>
+                <th className="px-4 py-3">Department</th>
                 <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredStudents.map((student) => (
-                <React.Fragment key={student._id}>
+              {filteredFaculty.map((faculty) => (
+                <React.Fragment key={faculty._id}>
                   <tr className="border-b border-gray-200 hover:bg-blue-50 transition">
                     <td className="px-4 py-3 font-medium">
-                      {student.firstName} {student.middleName || ""}{" "}
-                      {student.lastName}
+                      {faculty.firstName} {faculty.middleName || ""}{" "}
+                      {faculty.lastName}
                     </td>
-                    <td className="px-4 py-3">{student.enrollmentNo}</td>
-                    <td className="px-4 py-3">{student.branch}</td>
+                    <td className="px-4 py-3">{faculty.facultyId}</td>
+                    <td className="px-4 py-3">{faculty.department}</td>
                     <td className="px-4 py-3 flex gap-4">
                       <Button
-                        variant={expanded === student._id ? "outline" : "plain"}
-                        onClick={() => handleExpand(student._id)}
+                        variant={expanded === faculty._id ? "outline" : "plain"}
+                        onClick={() => handleExpand(faculty._id)}
                       >
-                        {expanded === student._id ? (
+                        {expanded === faculty._id ? (
                           <FaChevronUp />
                         ) : (
                           <FaChevronDown />
@@ -143,13 +143,13 @@ const StudentsList = () => {
                       </Button>
                       <Button
                         className="bg-gradient-to-r from-green-500 to-green-700 hover:bg-green-600 focus:ring-green-500"
-                        onClick={() => handleEdit(student)}
+                        onClick={() => handleEdit(faculty)}
                       >
                         <FaEdit />
                       </Button>
                       <Button
                       variant={"destructive"}
-                      onClick={() => handleDelete(student.enrollmentNo, student.firstName, student.lastName)}
+                      onClick={() => handleDelete(faculty.facultyId, faculty.firstName, faculty.lastName)}
                       >
                         <MdDeleteForever />
                       </Button>
@@ -157,7 +157,7 @@ const StudentsList = () => {
                   </tr>
                   {/* AnimatePresence + motion for dropdown details */}
                   <AnimatePresence>
-                    {expanded === student._id && (
+                    {expanded === faculty._id && (
                       <motion.tr
                         className="bg-blue-50"
                         initial={{ opacity: 0, y: -10 }}
@@ -167,10 +167,10 @@ const StudentsList = () => {
                       >
                         <td colSpan={4} className="px-6 py-4">
                           <div className="flex flex-col gap-2">
-                            {student.profile && (
+                            {faculty.profile && (
                               <div>
                                 <img
-                                  src={`${base_url}/media/student/${student.profile}?v=${student.updatedAt || Date.now()}`} 
+                                  src={`${base_url}/media/faculty/${faculty.profile}?v=${faculty.updatedAt || Date.now()}`} 
                                   // Force the image to reload by appending a cache-busting query string (e.g., a timestamp or Date.now()) to the image URL.
 
                                   alt="Profile"
@@ -180,19 +180,19 @@ const StudentsList = () => {
                             )}
                             <div>
                               <span className="font-semibold">Email:</span>{" "}
-                              {student.email}
+                              {faculty.email}
                             </div>
                             <div>
                               <span className="font-semibold">Phone:</span>{" "}
-                              {student.phoneNumber}
+                              {faculty.phoneNumber}
                             </div>
                             <div>
                               <span className="font-semibold">Semester:</span>{" "}
-                              {student.semester}
+                              {faculty.semester}
                             </div>
                             <div>
                               <span className="font-semibold">Gender:</span>{" "}
-                              {student.gender}
+                              {faculty.gender}
                             </div>
                           </div>
                         </td>
@@ -206,18 +206,18 @@ const StudentsList = () => {
         </div>
       )}
 
-      {/* Edit student modal  */}
+      {/* Edit faculty modal  */}
       <AnimatePresence>
-        {editStudent && (
+        {editFaculty && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <EditStudent
-              fetchStudents={fetchStudents}
-              student={editStudent}
+            <EditFaculty
+              fetchFaculties={fetchFaculties}
+              faculty={editFaculty}
               onClose={handleCloseEdit}
               setMessage={setMessage}
             />
@@ -225,7 +225,7 @@ const StudentsList = () => {
         )}
       </AnimatePresence>
     </div>
-  );
-};
+  )
+}
 
-export default StudentsList;
+export default FacultiesList
