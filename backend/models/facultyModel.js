@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const facultySchema = new mongoose.Schema({
+const FacultySchema = new mongoose.Schema({
   facultyId: {
     type: String,
     required: true,
@@ -45,6 +45,6 @@ const facultySchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-const facultyModel = mongoose.model("Faculty", facultySchema);
+const FacultyModel = mongoose.model("Faculty", FacultySchema);
 
-export default facultyModel;
+export default FacultyModel;

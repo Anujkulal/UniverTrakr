@@ -46,22 +46,11 @@ const ProfileScreen = () => {
     joined: "",
   })
 
-  // // Redirect if not authenticated
-  // useEffect(() => {
-  //   // console.log("Checking window location:", window.location)
-  //   if (!auth || !auth.userId) {
-  //     if (window.location.pathname !== "/signin") {
-  //       console.error("No user data found, redirecting to sign-in page.");
-  //       navigate("/signin", { replace: true });
-  //     }
-  //   }
-  // }, [auth, navigate]);
-
   const fetchCurrUser = async () => {
     try {
-      const response = await axios.get(`${backend_url}/${auth.role}/me`, {withCredentials: true});
+      const response = await axios.get(`${backend_url}/${user.role}/me`, {withCredentials: true});
       console.log('Response user data:', response);
-      // console.log("Role from auth:", auth.role);
+      console.log("Role from auth:", auth.role);
       
       setUser(prev => ({
         ...prev,
@@ -78,7 +67,7 @@ const ProfileScreen = () => {
         facultyId: response.data?.user?.facultyId || "",
         role: auth?.role?.toLowerCase(),
         profile: response.data.user.profile || "",
-        department: response.data.user.branch || "Nil",
+        department: response.data.user.branch || response.data.user.department || "Nil",
         joined: extractDate(response.data.user.createdAt) || "01-01-2000", // Default date if not available
       }))
     } catch (error) {

@@ -74,7 +74,7 @@ const EditFaculty: React.FC<EditFacultyProps> = ({faculty, onClose, fetchFaculti
         try {
             const response = await axios.get(`${backend_url}/${auth.role.toLowerCase()}/branch`, { withCredentials: true})
             setBranches(response.data.branch || [])
-            console.log('Fetched branches:', response.data.branch)
+            // console.log('Fetched branches:', response.data.branch)
         } catch (err) {
             console.error('Failed to fetch branch:', err)
         }

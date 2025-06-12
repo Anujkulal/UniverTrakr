@@ -6,6 +6,7 @@ import StudentScreen from "../student/StudentScreen";
 import BranchScreen from "./BranchScreen";
 import NoticeScreen from "./NoticeScreen";
 import FacultyScreen from "../faculty/FacultyScreen";
+import TimetableScreen from "./TimetableScreen";
 
 const HomeScreen = () => {
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
@@ -30,6 +31,7 @@ const HomeScreen = () => {
           <Route path="faculty" element={<FacultyScreen />} />
           <Route path="branch" element={<BranchScreen />} />
           <Route path="notice" element={<NoticeScreen />} />
+          <Route path="timetable" element={<TimetableScreen />} />
           {/* <Route index path="profile" element={<ProfileScreen />} />
           <Route index path="profile" element={<ProfileScreen />} /> */}
       </Routes>

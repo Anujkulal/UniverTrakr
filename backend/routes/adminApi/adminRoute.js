@@ -23,6 +23,8 @@ import {
 import { authenticate, roleOnly } from "../../middlewares/authenticate.js";
 import upload from "../../middlewares/multerMiddleware.js";
 import { addBranchController, getAllBranchController, removeBranchController } from "../../controllers/other/branchController.js";
+import { addFacultyDetailsController, addMultipleFacultyController, deleteFacultyController, getAllFacultyDetailsController, getFacultyByIdDetailsController, updateFacultyDetailsController, updateSelectedFacultyPasswordController } from "../../controllers/facultyController.js";
+import { getTimetableController, saveTimetableController } from "../../controllers/other/timetableController.js";
 
 const router = express.Router();
 
@@ -44,6 +46,19 @@ router.put("/students/:userId/password", authenticate, roleOnly("Admin"), update
 router.put("/students/:enrollmentNo", authenticate, roleOnly("Admin"), upload.single("profile"), updateStudentDetailsController);    // Update student details
 router.delete("/students/:enrollmentNo", authenticate, roleOnly("Admin"), deleteStudentController)
 
+//Faculty management (by Admin)
+router.post("/faculty", authenticate, roleOnly("Admin"), upload.single("profile"), addFacultyDetailsController);      // Add faculty
+router.post("/faculty/bulk", authenticate, roleOnly("Admin"), addMultipleFacultyController); // Add multiple faculty
+router.get("/faculty", authenticate, roleOnly("Admin"), getAllFacultyDetailsController);                              // Get all faculty
+router.get("/faculty/:facultyId", authenticate, roleOnly("Admin"), getFacultyByIdDetailsController);               // Get faculty by enrollmentNo
+router.put("/faculty/:userId/password", authenticate, roleOnly("Admin"), updateSelectedFacultyPasswordController);    // Update faculty password
+router.put("/faculty/:facultyId", authenticate, roleOnly("Admin"), upload.single("profile"), updateFacultyDetailsController);    // Update faculty details
+router.delete("/faculty/:facultyId", authenticate, roleOnly("Admin"), deleteFacultyController) // Delete faculty
+
+// Timetable management (by Admin)
+router.post("/timetable", authenticate, roleOnly("Admin"), saveTimetableController); // Add timetable
+router.get("/timetable", authenticate, roleOnly("Admin"), getTimetableController); // Get all timetables
+
 // Branch management (by Admin)
 router.post("/branch", authenticate, roleOnly("Admin"), addBranchController)
 router.get("/branch", authenticate, roleOnly("Admin"), getAllBranchController)
@@ -55,7 +70,5 @@ router.get("/", authenticate, roleOnly("Admin"), getAllAdminDetailsController); 
 router.get("/:adminId", authenticate, roleOnly("Admin"), getAdminByIdDetailsController);                // Get admin by ID
 router.put("/:adminId", authenticate, roleOnly("Admin"), upload.single("profile"), updateAdminDetailsController);  // Update admin
 router.put("/:userId/password", authenticate, roleOnly("Admin"), updateSelectedAdminPasswordController); // Update another admin's password
-
-
 
 export default router;

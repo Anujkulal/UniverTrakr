@@ -60,7 +60,7 @@ const AddFaculty = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
-    console.log("Submitting Form Data: ", formData);
+    // console.log("Submitting Form Data: ", formData);
     Object.entries(form).forEach(([key, value]) => {
       if (value !== null) formData.append(key, value as any);
     });
@@ -81,7 +81,7 @@ const AddFaculty = () => {
         { withCredentials: true }
       );
       setBranches(response.data.branch || []);
-      console.log("Fetched branches:", response.data.branch);
+      // console.log("Fetched branches:", response.data.branch);
     } catch (err) {
       console.error("Failed to fetch branch:", err);
     }

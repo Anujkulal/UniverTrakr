@@ -36,6 +36,7 @@ const sectionMap: Record<
     { label: "Faculty", icon: <FaChalkboardTeacher />, to: "/admin/faculty" },
     { label: "Branch", icon: <FaUniversity />, to: "/admin/branch" },
     { label: "Notice", icon: <FaBell />, to: "/admin/notice" },
+    { label: "Timetable", icon: <FaCalendarAlt />, to: "/admin/timetable" },
     { label: "Subjects", icon: <FaBook />, to: "/admin/subjects" },
     { label: "Admins", icon: <FaUserShield />, to: "/admin/admins" },
   ],
