@@ -26,6 +26,7 @@ import { addBranchController, getAllBranchController, removeBranchController } f
 import { addFacultyDetailsController, addMultipleFacultyController, deleteFacultyController, getAllFacultyDetailsController, getFacultyByIdDetailsController, updateFacultyDetailsController, updateSelectedFacultyPasswordController } from "../../controllers/facultyController.js";
 import { deleteTimetableController, getTimetableController, saveTimetableController, updateTimetableController } from "../../controllers/other/timetableController.js";
 import { AddNoticeController, GetAllNoticesController, RemoveNoticeController } from "../../controllers/other/NoticeController.js";
+import { addSubjectController, getAllSubjectController, removeSubjectController } from "../../controllers/other/subjectController.js";
 
 const router = express.Router();
 
@@ -71,6 +72,11 @@ router.put("/timetable/:branch/:semester", authenticate, roleOnly("Admin"), upda
 router.post("/branch", authenticate, roleOnly("Admin"), addBranchController)
 router.get("/branch", authenticate, roleOnly("Admin"), getAllBranchController)
 router.delete("/branch/:branchCode", authenticate, roleOnly("Admin"), removeBranchController);
+
+// Subject management (by Admin)
+router.post("/subject", authenticate, roleOnly("Admin"), addSubjectController)
+router.get("/subject", authenticate, roleOnly("Admin"), getAllSubjectController)
+router.delete("/subject/:subjectCode", authenticate, roleOnly("Admin"), removeSubjectController);
 
 // Admin - admin management
 router.post("/", authenticate, upload.single("profile"), roleOnly("Admin"), addAdminDetailsController);  // Create admin

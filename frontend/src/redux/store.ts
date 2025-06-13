@@ -5,6 +5,7 @@ import facultyReducer from './slices/facultySlice';
 import profileReducer from './slices/profileSlice';
 import branchReducer from './slices/branchSlice';
 import timetableReducer from './slices/timetableSlice';
+import subjectReducer from './slices/subjectSlice';
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         profile: profileReducer,
         branch: branchReducer,
         timetable: timetableReducer,
+        subject: subjectReducer,
     }
 })
 

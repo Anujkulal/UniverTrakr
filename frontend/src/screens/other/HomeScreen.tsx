@@ -7,6 +7,8 @@ import BranchScreen from "./BranchScreen";
 import NoticeScreen from "./NoticeScreen";
 import FacultyScreen from "../faculty/FacultyScreen";
 import TimetableScreen from "./TimetableScreen";
+import SubjectScreen from "./SubjectScreen";
+import DashboardScreen from "./DashboardScreen";
 
 const HomeScreen = () => {
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
@@ -26,14 +28,14 @@ const HomeScreen = () => {
     <div className="flex min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
       <Sidebar role={auth?.role?.toLowerCase()} />
       <Routes>
-          <Route index path="profile" element={<ProfileScreen />} />
+          <Route index path="dashboard" element={<DashboardScreen />} />
+          <Route path="profile" element={<ProfileScreen />} />
           <Route path="student" element={<StudentScreen />} />
           <Route path="faculty" element={<FacultyScreen />} />
           <Route path="branch" element={<BranchScreen />} />
           <Route path="notice" element={<NoticeScreen />} />
           <Route path="timetable" element={<TimetableScreen />} />
-          {/* <Route index path="profile" element={<ProfileScreen />} />
-          <Route index path="profile" element={<ProfileScreen />} /> */}
+          <Route path="subjects" element={<SubjectScreen />} />
       </Routes>
     </div>
   );

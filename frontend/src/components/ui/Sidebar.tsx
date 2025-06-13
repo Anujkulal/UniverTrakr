@@ -14,6 +14,7 @@ import {
   FaListAlt,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { MdSpaceDashboard } from "react-icons/md";
 import { clearAuth, logout } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/redux/store";
@@ -31,6 +32,7 @@ const sectionMap: Record<
   { label: string; icon: React.ReactNode; to: string }[]
 > = {
   admin: [
+    { label: "Dashboard", icon: <MdSpaceDashboard />, to: "/admin/dashboard" },
     { label: "Profile", icon: <FaUser />, to: "/admin/profile" },
     { label: "Student", icon: <FaUserGraduate />, to: "/admin/student" },
     { label: "Faculty", icon: <FaChalkboardTeacher />, to: "/admin/faculty" },
@@ -76,7 +78,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role = "student" }) => {
     <aside className="h-screen w-64 bg-gradient-to-b from-gray-200 to-gray-300 text-black flex flex-col shadow-lg">
       <div className="flex flex-col items-center justify-center h-20 border-b border-zinc-300">
         <span className="text-2xl font-bold tracking-wide">{mainTitle()} </span>
-        <span className="mt-2 bg-gradient-to-r from-blue-200 to-blue-300 text-sm  shadow p-1 rounded-2xl">{role}</span>
+        <span className={`mt-2 bg-gradient-to-r ${role === "admin" ? "from-orange-200 to-orange-300": role=== "faculty"? "from-green-200 to-green-300" : "from-blue-200 to-blue-300"} text-sm  shadow p-1 rounded-2xl`}>{role}</span>
       </div>
       <nav className="flex-1 py-6 m-2">
         <ul className="space-y-2">

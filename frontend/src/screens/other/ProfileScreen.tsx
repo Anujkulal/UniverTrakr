@@ -67,7 +67,7 @@ const ProfileScreen = () => {
         facultyId: response.data?.user?.facultyId || "",
         role: auth?.role?.toLowerCase(),
         profile: response.data.user.profile || "",
-        department: response.data.user.branch || response.data.user.department || "Nil",
+        department: response.data.user.branch || response.data.user.department || "", // Use branch or department based on user type
         joined: extractDate(response.data.user.createdAt) || "01-01-2000", // Default date if not available
       }))
     } catch (error) {
@@ -130,8 +130,16 @@ const ProfileScreen = () => {
           <div className="w-full border-t border-gray-200 my-4"></div>
           <div className="w-full flex flex-col gap-2">
             <div className="flex justify-between">
-              <span className="font-medium text-gray-700">Department:</span>
-              <span className="text-gray-600">{user.department}</span>
+              {
+                user.department && (
+                  <>
+                    <span className="font-medium text-gray-700">Department:</span>
+                    <span className="text-gray-600">{user.department}</span>
+                  </>
+                )
+              }
+              {/* <span className="font-medium text-gray-700">Department:</span>
+              <span className="text-gray-600">{user.department}</span> */}
             </div>
             <div className="flex justify-between">
               <span className="font-medium text-gray-700">Joined:</span>
