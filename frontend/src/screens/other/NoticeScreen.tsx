@@ -5,88 +5,52 @@ import { Button } from '@/components/ui/Button'
 import MessageBar from '@/components/ui/MessageBar'
 import H2 from '@/components/ui/H2'
 import { Input } from '@/components/ui/Input'
-
-const backend_url = baseUrl()
+import AddNotice from './features/notice/AddNotice'
+import NotifyAll from './features/notice/NotifyAll'
+import NotifyFaculty from './features/notice/NotifyFaculty'
+import { MdNotificationsActive } from "react-icons/md";
+import ViewNotice from './features/notice/ViewNotice'
 
 const NoticeScreen = () => {
-  const [form, setForm] = useState({
-    title: '',
-    description: '',
-    link: '',
-    branch: ''
-  })
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setMessage(null)
-    try {
-      const res = await axios.post(`${backend_url}/admin/notice`, form, { withCredentials: true })
-      setMessage({ type: 'success', text: res.data.message || 'Notice Added Successfully' })
-      setForm({ title: '', description: '', link: '', branch: '' })
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.response?.data?.message || 'Failed to add notice' })
-    }
-    setLoading(false)
-  }
+      const [mode, setMode] = useState<'all' | 'add' | 'faculty' | 'view'>('all');
 
   return (
-    <div className="flex flex-1 items-start mt-10 justify-center">
-        <div className='bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg'>
-
-       
-      {message && (
-        <MessageBar
-          variant={message.type}
-          message={message.text}
-          onClose={() => setMessage(null)}
-        />
-      )}
-      <H2 className='text-blue-700'>Add Notice</H2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input 
-        type='text'
-        name='title'
-        placeholder='Title'
-        value={form.title}
-        onChange={handleChange}
-        required
-        />
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
-        <Input
-          type="text"
-          name="link"
-          placeholder="Link"
-          value={form.link}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          type="text"
-          name="branch"
-          placeholder="Branch"
-          value={form.branch}
-          onChange={handleChange}
-          required
-        />
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Adding...' : 'Add Notice'}
+    <div className="flex flex-1 flex-col items-center justify-start py-8">
+      <div className="flex gap-4 mb-8">
+        
+        <Button
+        variant={mode === 'all' ? 'default' : 'outline'}
+        onClick={() => setMode("all")}
+        >
+          Notify All
         </Button>
-      </form>
-       </div>
+        <Button
+        variant={mode === 'add' ? 'default' : 'outline'}
+        onClick={() => setMode("add")}
+        >
+          Add Notice
+        </Button>
+        <Button
+        variant={mode === 'faculty' ? 'default' : 'outline'}
+        onClick={() => setMode("faculty")}
+        >
+          Notify Faculty
+        </Button>
+        <Button
+        variant={mode === 'view' ? 'default' : 'outline'}
+        className='bg-orange-400 hover:text-orange-500'
+        onClick={() => setMode("view")}
+        >
+          <MdNotificationsActive size={20} className='hover:scale-110' />
+        </Button>
+        
+      </div>
+      <div className="w-full flex justify-center">
+        {mode === 'all' && <NotifyAll />}
+        {mode === 'add' && <AddNotice />}
+        {mode === 'faculty' && <NotifyFaculty />}
+        {mode === 'view' && <ViewNotice />}
+      </div>
     </div>
   )
 }

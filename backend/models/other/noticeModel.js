@@ -14,13 +14,13 @@ const NoticeSchema = new mongoose.Schema({
     },
     branch: {
         type: [String], // Array of branches
-        required: true,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    role: {
+        type: String, // Array of roles
+        enum: ["All", "Faculty", "Student"],
+        default: ["All"],
     },
-});
+}, {timestamps: true});
 
 const NoticeModel = mongoose.model("Notice", NoticeSchema)
 

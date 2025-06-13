@@ -49,7 +49,7 @@ const ProfileScreen = () => {
   const fetchCurrUser = async () => {
     try {
       const response = await axios.get(`${backend_url}/${user.role}/me`, {withCredentials: true});
-      console.log('Response user data:', response);
+      // console.log('Response user data:', response);
       console.log("Role from auth:", auth.role);
       
       setUser(prev => ({

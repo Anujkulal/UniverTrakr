@@ -25,6 +25,7 @@ import upload from "../../middlewares/multerMiddleware.js";
 import { addBranchController, getAllBranchController, removeBranchController } from "../../controllers/other/branchController.js";
 import { addFacultyDetailsController, addMultipleFacultyController, deleteFacultyController, getAllFacultyDetailsController, getFacultyByIdDetailsController, updateFacultyDetailsController, updateSelectedFacultyPasswordController } from "../../controllers/facultyController.js";
 import { deleteTimetableController, getTimetableController, saveTimetableController, updateTimetableController } from "../../controllers/other/timetableController.js";
+import { AddNoticeController, GetAllNoticesController, RemoveNoticeController } from "../../controllers/other/NoticeController.js";
 
 const router = express.Router();
 
@@ -54,6 +55,11 @@ router.get("/faculty/:facultyId", authenticate, roleOnly("Admin"), getFacultyByI
 router.put("/faculty/:userId/password", authenticate, roleOnly("Admin"), updateSelectedFacultyPasswordController);    // Update faculty password
 router.put("/faculty/:facultyId", authenticate, roleOnly("Admin"), upload.single("profile"), updateFacultyDetailsController);    // Update faculty details
 router.delete("/faculty/:facultyId", authenticate, roleOnly("Admin"), deleteFacultyController) // Delete faculty
+
+// Notice management (by Admin)
+router.post("/notice", authenticate, roleOnly("Admin"), AddNoticeController); // Add notice
+router.get("/notice", authenticate, roleOnly("Admin"), GetAllNoticesController); // Get all notices
+router.delete("/notice/:noticeId", authenticate, roleOnly("Admin"), RemoveNoticeController); // remove notice
 
 // Timetable management (by Admin)
 router.post("/timetable", authenticate, roleOnly("Admin"), saveTimetableController); // Add timetable
