@@ -10,7 +10,7 @@ const TimetableSchema = new mongoose.Schema({
     required: true,
   },
   timings: [String],
-  data: [String],
+  data: [[String]],
   
 
 }, { timestamps: true });

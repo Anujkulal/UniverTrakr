@@ -24,7 +24,7 @@ import { authenticate, roleOnly } from "../../middlewares/authenticate.js";
 import upload from "../../middlewares/multerMiddleware.js";
 import { addBranchController, getAllBranchController, removeBranchController } from "../../controllers/other/branchController.js";
 import { addFacultyDetailsController, addMultipleFacultyController, deleteFacultyController, getAllFacultyDetailsController, getFacultyByIdDetailsController, updateFacultyDetailsController, updateSelectedFacultyPasswordController } from "../../controllers/facultyController.js";
-import { getTimetableController, saveTimetableController } from "../../controllers/other/timetableController.js";
+import { deleteTimetableController, getTimetableController, saveTimetableController, updateTimetableController } from "../../controllers/other/timetableController.js";
 
 const router = express.Router();
 
@@ -58,6 +58,8 @@ router.delete("/faculty/:facultyId", authenticate, roleOnly("Admin"), deleteFacu
 // Timetable management (by Admin)
 router.post("/timetable", authenticate, roleOnly("Admin"), saveTimetableController); // Add timetable
 router.get("/timetable", authenticate, roleOnly("Admin"), getTimetableController); // Get all timetables
+router.delete("/timetable/:branch/:semester", authenticate, roleOnly("Admin"), deleteTimetableController); // Get timetable by branch and semester
+router.put("/timetable/:branch/:semester", authenticate, roleOnly("Admin"), updateTimetableController);
 
 // Branch management (by Admin)
 router.post("/branch", authenticate, roleOnly("Admin"), addBranchController)

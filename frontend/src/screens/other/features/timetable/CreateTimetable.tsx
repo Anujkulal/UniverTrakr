@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HotTable } from "@handsontable/react";
 import "handsontable/dist/handsontable.full.min.css";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import H2 from "@/components/ui/H2";
+import { useDispatch, useSelector } from "react-redux";
+import { clearTimetableState, fetchTimetable, saveTimetable } from "@/redux/slices/timetableSlice";
+import type { AppDispatch, RootState } from "@/redux/store";
+import MessageBar from "@/components/ui/MessageBar";
+import axios from "axios";
+import { baseUrl } from "@/lib/baseUrl";
+
+const backend_url = baseUrl();
 
 const days = [
   "Monday",
@@ -23,49 +31,75 @@ const initialTimings = [
   "2:00 - 3:00",
 ];
 
+interface BranchProps {
+    name: string;
+    code: string;
+}
+
 const CreateTimetable = () => {
   const [timings, setTimings] = useState([...initialTimings]);
+  // console.log("Initial Timings:", timings);
   const [data, setData] = useState(
     days.map(() => Array(initialTimings.length).fill(""))
   );
   // console.log("Initial Data:", data);
+  // console.log("Initial Data Type:: ",typeof data);
+  
   const [branch, setBranch] = useState("");
+  const [branches, setBranches] = useState<BranchProps[]>([])
   const [semester, setSemester] = useState("");
   const [timingsInput, setTimingsInput] = useState(timings.join(", ")); // For user input
+
+  const {error, success } = useSelector((state: RootState) => state.timetable);
+  const dispatch = useDispatch<AppDispatch>();
+  const auth = JSON.parse(localStorage.getItem("user") || "{}");
+  const role = (auth.role.toLowerCase() === "admin" || auth.role.toLowerCase() === "faculty") ? auth.role.toLowerCase() : "student";
 
   const columns = timings.map(() => ({
     editor: "text",
   }));
 
   const handleSave = async () => {
-    await fetch("http://localhost:3000/timetable", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ branch, semester, timings, data }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-        alert("Timetable saved successfully!");
+    if(!branch || !semester) {
+      alert("Please enter branch and semester");
+      return;
+    };
+    
+    dispatch(saveTimetable({branch, semester, timings, data, role }))
+    .unwrap()
+      .then((response) => {
+          console.log("Timetable saved successfully:", response);
+          // if()
+          setData(days.map(() => Array(timings.length).fill(""))); // Reset data after save
+          setTimings(initialTimings); // Reset timings to initial state
+          setTimingsInput(initialTimings.join(", ")); // Reset input field
+          setBranch("");
+          setSemester("");
       })
       .catch((error) => {
-        console.error("Error:", error);
-        alert("Failed to save timetable.");
+          console.error("Error saving timetable:", error);
+          // alert(`Failed to save timetable. Please try again.", ${error}`);
       });
+    // setBranch("");
+    // setSemester("");
   };
 
-  const fetchTimetable = async () => {
-    const response = await fetch(
-      `http://localhost:3000/timetable`
-    );
-    if (response.ok) {
-      const timetable = await response.json();
-      setTimings(timetable[0].timings);
-      setData(timetable[0].data);
-    } else {
-      alert("Timetable not found");
-    }
-  };
+  const fetchBranch = async () => {
+        try {
+            const response = await axios.get(`${backend_url}/${auth.role.toLowerCase()}/branch`, { withCredentials: true})
+            setBranches(response.data.branch || [])
+            // console.log('Fetched branches:', response.data.branch)
+        } catch (err) {
+            console.error('Failed to fetch branch:', err)
+        }
+  }
+
+  useEffect(() => {
+    if(auth && auth.role)
+            fetchBranch();
+  }, [])
+
+  
 
   const loadTimings = () => {
     if(!window.confirm("This will reset the current timetable. Do you want to continue?")) {
@@ -82,17 +116,38 @@ const CreateTimetable = () => {
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-10 bg-gradient-to-br from-gray-50 to-blue-50 rounded-3xl shadow-2xl border border-blue-100">
+      <MessageBar
+        variant={error ? "error" : success ? "success" : "default"}
+        message={error || success || ''}
+        onClose={() => dispatch(clearTimetableState())}
+      />
       <H2 className="text-3xl text-blue-700 drop-shadow-lg tracking-tight">Class Timetable</H2>
       <div className="flex flex-col gap-6 mb-10 justify-center">
         <div className="flex flex-wrap gap-6 justify-center items-center">
-          <Input
+          {/* <Input
             type="text"
             placeholder="Branch (e.g. CSE)"
             value={branch}
             onChange={e => setBranch(e.target.value)}
             className="w-56 text-lg"
             required
-          />
+          /> */}
+          <select
+          name="branch"
+          value={branch}
+          onChange={e => setBranch(e.target.value)}
+          className=" px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+          required
+        >
+          <option value="">Branch / Department</option>
+          {
+            branches.map((branch) => (
+              <option key={branch.code} value={branch.code}>
+                {branch.name} ({branch.code})
+              </option>
+            ))
+          }          
+        </select>
           <Input
             type="number"
             placeholder="Semester"
@@ -115,13 +170,13 @@ const CreateTimetable = () => {
           >
             Load Timings
           </Button>
-          <Button
-            onClick={fetchTimetable}
+          {/* <Button
+            onClick={handleFetchTimetable}
             variant={"success"}
             className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-xl shadow transition"
           >
             Fetch Timetable
-          </Button>
+          </Button> */}
           <Button
           variant={"success"}
             onClick={handleSave}
@@ -146,7 +201,10 @@ const CreateTimetable = () => {
           height="auto"
           rowHeights={55}
           licenseKey="non-commercial-and-evaluation"
-          afterChange={(changes, source) => {
+          afterChange={(
+            changes: [any, any, any, any][] | null, 
+            source: string
+          ) => {
             if (changes && source !== "loadData") {
               const newData = [...data];
               changes.forEach(([row, col, oldVal, newVal]) => {
@@ -155,20 +213,22 @@ const CreateTimetable = () => {
               setData(newData);
             }
           }}
-          afterGetColHeader={(col, TH) => {
+          afterGetColHeader={(col: number, TH: HTMLTableCellElement) => {
             if (col >= 0) {
-              TH.contentEditable = true;
+              TH.contentEditable = "true";
               TH.style.background = "#e3f2fd";
               TH.onblur = null;
               TH.onblur = (e) => {
+                const target = e.target as HTMLTableCellElement;
                 const newTimings = [...timings];
-                newTimings[col] = e.target.innerText;
+                newTimings[col] = target.innerText;
                 setTimings(newTimings);
               };
-              TH.onkeydown = (e) => {
+              TH.onkeydown = (e: KeyboardEvent) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
-                  TH.blur();
+                  // TH.blur();
+                  (e.target as HTMLTableCellElement).blur();
                 }
               };
             }

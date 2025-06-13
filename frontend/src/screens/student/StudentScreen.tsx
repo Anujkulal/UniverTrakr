@@ -35,10 +35,6 @@ const StudentScreen = () => {
         {mode === 'add' && <AddStudent />}
         {mode === 'view' && ( <StudentsList /> )}
         {mode === 'add-multiple' && ( <AddMultipleStudent />
-          // <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg text-center">
-          //   <h2 className="text-2xl font-bold text-indigo-700 mb-4">Add Multiple Students (Coming Soon)</h2>
-          //   {/* Implement add multiple students form here */}
-          // </div>
         )}
       </div>
     </div>
