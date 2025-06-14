@@ -24,6 +24,7 @@ const ViewNotice = () => {
   const [error, setError] = useState<string | null>(null);
 
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
+  const role = auth?.role?.toLowerCase() || "";
 
   useEffect(() => {
     const fetchNotices = async () => {
@@ -96,12 +97,16 @@ const ViewNotice = () => {
                   </a>
                 )}
               </div>
-              <Button
-              variant={"destructive"}
-              onClick={() => handleDeleteNotice(notice._id)}
-              >
-                <MdDeleteForever size={20} />
-              </Button>
+              {
+                role !== "student" && (
+                  <Button
+                  variant={"destructive"}
+                  onClick={() => handleDeleteNotice(notice._id)}
+                  >
+                    <MdDeleteForever size={20} />
+                  </Button>
+                )
+              }
             </li>
           ))}
         </ul>

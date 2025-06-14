@@ -7,30 +7,48 @@ import { MdNotificationsActive } from "react-icons/md";
 import ViewNotice from './features/notice/ViewNotice'
 
 const NoticeScreen = () => {
-      const [mode, setMode] = useState<'all' | 'add' | 'faculty' | 'view'>('all');
+      const [mode, setMode] = useState<'all' | 'add' | 'faculty' | 'view'>('view');
+      const auth = JSON.parse(localStorage.getItem("user") || "{}");
+  const role = auth?.role?.toLowerCase() || "";
 
   return (
     <div className="flex flex-1 flex-col items-center justify-start py-8">
       <div className="flex gap-4 mb-8">
-        
-        <Button
-        variant={mode === 'all' ? 'default' : 'outline'}
-        onClick={() => setMode("all")}
-        >
-          Notify All
-        </Button>
-        <Button
+        {
+          role === 'admin' && (
+            <div>
+              <Button
+              variant={mode === 'faculty' ? 'default' : 'outline'}
+              onClick={() => setMode("faculty")}
+              >
+                Notify Faculty
+              </Button>
+              <Button
+              variant={mode === 'all' ? 'default' : 'outline'}
+              onClick={() => setMode("all")}
+              >
+                Notify All
+              </Button>
+            </div>
+          )
+        }
+        {
+          (role === "faculty" || role === "admin") && (
+              <Button
+                variant={mode === 'add' ? 'default' : 'outline'}
+                onClick={() => setMode("add")}
+              >
+                Add Notice
+              </Button>
+          )
+        }
+
+        {/* <Button
         variant={mode === 'add' ? 'default' : 'outline'}
         onClick={() => setMode("add")}
         >
           Add Notice
-        </Button>
-        <Button
-        variant={mode === 'faculty' ? 'default' : 'outline'}
-        onClick={() => setMode("faculty")}
-        >
-          Notify Faculty
-        </Button>
+        </Button> */}
         <Button
         variant={mode === 'view' ? 'default' : 'outline'}
         className='bg-orange-400 hover:text-orange-500'

@@ -40,7 +40,7 @@ const studentSchema = new mongoose.Schema({
   profile: {
     type: String,
     default: "default-profile.png",
-  }
+  },
 }, { timestamps: true });
 
 const StudentModel = mongoose.model("Student", studentSchema);

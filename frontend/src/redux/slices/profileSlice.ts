@@ -21,7 +21,7 @@ export const editProfile = createAsyncThunk
 >("profile/editProfile", async ({formData, role, userId}, { rejectWithValue}) => {
     try {
         const response = await axios.put(
-            `${backend_url}/${role}/${userId}`,
+            `${backend_url}/${role}/${role}s/${userId}`,
             formData,
             {
                 headers: { "Content-Type": "multipart/form-data" },

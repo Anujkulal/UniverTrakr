@@ -45,7 +45,6 @@ const sectionMap: Record<
   faculty: [
     { label: "Profile", icon: <FaUser />, to: "/faculty/profile" },
     { label: "Student", icon: <FaUserGraduate />, to: "/faculty/student" },
-    { label: "Branch", icon: <FaUniversity />, to: "/faculty/branch" },
     { label: "Upload Marks", icon: <FaClipboardList />, to: "/faculty/upload-marks" },
     { label: "Timetable", icon: <FaCalendarAlt />, to: "/faculty/timetable" },
     { label: "Notice", icon: <FaBell />, to: "/faculty/notice" },

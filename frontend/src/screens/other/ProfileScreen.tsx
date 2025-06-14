@@ -79,6 +79,9 @@ const ProfileScreen = () => {
       fetchCurrUser();
     }
   }, [])
+  
+  auth.branchCode = user.department || ""; // Set branchCode for faculty
+  localStorage.setItem("user", JSON.stringify(auth));
 
   // Prevent rendering if not authenticated
   if (!auth || !auth.userId) return null;

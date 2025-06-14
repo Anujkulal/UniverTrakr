@@ -77,7 +77,7 @@ const SubjectScreen = () => {
             <Input 
               placeholder='Code (ex: BCS601)'
               value={subjectCode}
-              onChange={e => setSubjectCode(e.target.value)}
+              onChange={e => setSubjectCode(e.target.value.toUpperCase())}
             />
             <Button onClick={handleAddSubject}>
               {loading ? <HiDotsHorizontal size={25} /> : <MdOutlineAddCircle size={25} /> }

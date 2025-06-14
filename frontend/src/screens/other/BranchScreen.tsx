@@ -80,7 +80,7 @@ const BranchScreen = () => {
             <Input 
               placeholder='Code (ex: CSE)'
               value={branchCode}
-              onChange={e => setBranchCode(e.target.value)}
+              onChange={e => setBranchCode(e.target.value.toUpperCase())}
             />
             <Button onClick={handleAddBranch}>
               {loading ? <HiDotsHorizontal size={25} /> : <MdOutlineAddCircle size={25} /> }

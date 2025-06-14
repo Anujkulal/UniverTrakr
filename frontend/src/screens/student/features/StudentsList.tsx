@@ -36,6 +36,10 @@ const StudentsList = () => {
   const [message, setMessage] = useState<{type: "success" | "error"; text: string} | null >(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const auth = JSON.parse(localStorage.getItem("user") || "{}");
+  const role = auth?.role?.toLowerCase() || "";
+  const branchCode = auth?.branchCode || "";
+
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -43,6 +47,15 @@ const StudentsList = () => {
   const fetchStudents = async () => {
     setLoading(true);
     try {
+      if(role === "faculty"){
+        const res = await axios.get(`${backend_url}/faculty/students/${branchCode}`, {
+          withCredentials: true,
+        });
+        // console.log('Fetched students:', res.data.students)
+        setStudents(res.data.students || []);
+        setLoading(false);
+        return;
+      }
       const res = await axios.get(`${backend_url}/admin/students`, {
         withCredentials: true,
       });
@@ -109,7 +122,7 @@ const StudentsList = () => {
       ) : filteredStudents.length === 0 ? (
         <span>Students not found!</span>
       ) : (
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="max-h-[600px] overflow-y-auto bg-white rounded-xl shadow-lg overflow-hidden">
         {/* <input type="search" name="" id="" placeholder="search here..."/> */}
           <table className="w-full text-left">
             <thead className="bg-blue-200">
@@ -147,12 +160,16 @@ const StudentsList = () => {
                       >
                         <FaEdit />
                       </Button>
-                      <Button
-                      variant={"destructive"}
-                      onClick={() => handleDelete(student.enrollmentNo, student.firstName, student.lastName)}
-                      >
-                        <MdDeleteForever />
-                      </Button>
+                      {
+                        role === "admin" && (
+                          <Button
+                          variant={"destructive"}
+                          onClick={() => handleDelete(student.enrollmentNo, student.firstName, student.lastName)}
+                          >
+                            <MdDeleteForever />
+                          </Button>
+                        )
+                      }
                     </td>
                   </tr>
                   {/* AnimatePresence + motion for dropdown details */}

@@ -37,6 +37,8 @@ const AddStudent = () => {
   const { loading, error, success } = useSelector((state: RootState) => state.student)
 
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
+  const role = auth?.role?.toLowerCase() || "";
+  const branchCode = auth?.branchCode || "";
   // console.log('User from localStorage:', auth);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -161,17 +163,22 @@ const AddStudent = () => {
           name="branch"
           value={form.branch}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
           required
         >
           <option value="">Branch</option>
           {
-            branches.map((branch) => (
-              <option key={branch.code} value={branch.code}>
-                {branch.name} ({branch.code})
-              </option>
-            ))
-          }          
+            role === "faculty" ? (
+              <option value={branchCode}>{branchCode}</option>
+            ) : (
+                branches.map((branch) => (
+                  <option key={branch.code} value={branch.code}>
+                    {branch.name} ({branch.code})
+                  </option>
+                ))
+                      
+            )
+          }
         </select>
 
         <select
@@ -207,7 +214,7 @@ const AddStudent = () => {
       <Button
         className='w-full'
         type='submit'
-        disabled={loading}
+        disabled={loading || !form.firstName || !form.lastName || !form.enrollmentNo || !form.email || !form.branch || !form.semester}
       >
         {loading ? 'Adding...' : 'Add Student'}
       </Button>

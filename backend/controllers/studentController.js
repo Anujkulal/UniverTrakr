@@ -285,6 +285,22 @@ const getAllStudentDetailsController = async (req, res) => {
   }
 }
 
+const getAllStudentDetailsByBranchController = async (req, res) => {
+  try{
+    const {branchCode} = req.params;
+    const students = await StudentModel.find({branch: branchCode});
+
+    if(students.length === 0){
+      return res.status(404).json({message: "No students found for this branch"});
+    }
+
+    return res.status(200).json({message: "Students found", students});
+  } catch(error){
+    console.error("Error while fetching students by branch:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 const getStudentByIdDetailsController = async (req, res) => {
   try{
     const {enrollmentNo} = req.params;
@@ -360,6 +376,7 @@ export {
     addStudentDetailsController,
     addMultipleStudentsController,
     getAllStudentDetailsController,
+    getAllStudentDetailsByBranchController,
     getStudentByIdDetailsController,
     getStudentMyDetailsController,
     updateStudentDetailsController,

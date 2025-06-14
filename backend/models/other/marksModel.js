@@ -8,17 +8,20 @@ const MarksSchema = new mongoose.Schema({
   internal: {
     internal1: { type: Number, default: 0 },
     internal2: { type: Number, default: 0 },
-    internal3: { type: Number, default: 0 },
+  },
+  internalAvg: {
+    type: Number,
+    default: 0,
   },
   assignment: {
     type: Number,
     default: 0,
   },
-  external: {
+  totalInternal: {
     type: Number,
     default: 0,
   },
-  totalInternal: {
+  external: {
     type: Number,
     default: 0,
   },
