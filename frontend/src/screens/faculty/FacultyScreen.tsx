@@ -5,7 +5,7 @@ import FacultiesList from './features/FacultiesList'
 import AddMultipleFaculty from './features/AddMultipleFaculty'
 
 const FacultyScreen = () => {
-    const [mode, setMode] = useState<'add' | 'view' | 'add-multiple'>('add')
+    const [mode, setMode] = useState<'add' | 'manage' | 'add-multiple'>('add')
   
   return (
     <div className="flex flex-1 flex-col items-center justify-start py-8">
@@ -18,10 +18,10 @@ const FacultyScreen = () => {
           Add Faculty
         </Button>
         <Button
-        variant={mode === 'view' ? 'default' : 'outline'}
-        onClick={() => setMode("view")}
+        variant={mode === 'manage' ? 'default' : 'outline'}
+        onClick={() => setMode("manage")}
         >
-          View Faculty
+          Manage Faculty
         </Button>
         <Button
         variant={mode === 'add-multiple' ? 'default' : 'outline'}
@@ -33,7 +33,7 @@ const FacultyScreen = () => {
       </div>
       <div className="w-full flex justify-center">
         {mode === 'add' && <AddFaculty />}
-        {mode === 'view' && ( <FacultiesList /> )}
+        {mode === 'manage' && ( <FacultiesList /> )}
         {mode === 'add-multiple' && ( <AddMultipleFaculty />
         )}
       </div>

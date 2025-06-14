@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
 import studentReducer from './slices/studentSlice';
 import facultyReducer from './slices/facultySlice';
+import adminReducer from './slices/adminSlice';
 import profileReducer from './slices/profileSlice';
 import branchReducer from './slices/branchSlice';
 import timetableReducer from './slices/timetableSlice';
@@ -12,6 +13,7 @@ export const store = configureStore({
         auth: authReducer,
         student: studentReducer,
         faculty: facultyReducer,
+        admin: adminReducer,
         profile: profileReducer,
         branch: branchReducer,
         timetable: timetableReducer,

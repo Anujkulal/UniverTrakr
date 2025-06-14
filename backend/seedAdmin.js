@@ -32,7 +32,7 @@ const seedAdmin = async () => {
       lastname: "Admin",
       email: "admin@gmail.com",
       phone: "1234567890",
-      gender: "Male",
+      gender: "male",
      // profile: "default-profile.png",
     });
 

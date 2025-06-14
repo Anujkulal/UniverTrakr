@@ -5,7 +5,7 @@ import StudentsList from './features/StudentsList'
 import AddMultipleStudent from './features/AddMultipleStudent'
 
 const StudentScreen = () => {
-  const [mode, setMode] = useState<'add' | 'view' | 'add-multiple'>('add')
+  const [mode, setMode] = useState<'add' | 'manage' | 'add-multiple'>('add')
 
   return (
     <div className="flex flex-1 flex-col items-center justify-start py-8">
@@ -18,10 +18,10 @@ const StudentScreen = () => {
           Add Student
         </Button>
         <Button
-        variant={mode === 'view' ? 'default' : 'outline'}
-        onClick={() => setMode("view")}
+        variant={mode === 'manage' ? 'default' : 'outline'}
+        onClick={() => setMode("manage")}
         >
-          View Student
+          Manage Student
         </Button>
         <Button
         variant={mode === 'add-multiple' ? 'default' : 'outline'}
@@ -33,7 +33,7 @@ const StudentScreen = () => {
       </div>
       <div className="w-full flex justify-center">
         {mode === 'add' && <AddStudent />}
-        {mode === 'view' && ( <StudentsList /> )}
+        {mode === 'manage' && ( <StudentsList /> )}
         {mode === 'add-multiple' && ( <AddMultipleStudent />
         )}
       </div>

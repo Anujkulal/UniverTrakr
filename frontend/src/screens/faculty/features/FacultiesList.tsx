@@ -68,7 +68,7 @@ const FacultiesList = () => {
   };
 
   const handleDelete = async (facultyId: string, firstName: string, lastName: string) => {
-    if (!window.confirm(`Are you sure you want to remove Faculty: "${firstName} ${lastName}"?`)) {
+    if (!window.confirm(`Are you sure you want to remove faculty: "${firstName} ${lastName}"?`)) {
       return;
     }
     try {
@@ -186,10 +186,10 @@ const FacultiesList = () => {
                               <span className="font-semibold">Phone:</span>{" "}
                               {faculty.phoneNumber}
                             </div>
-                            <div>
+                            {/* <div>
                               <span className="font-semibold">Semester:</span>{" "}
                               {faculty.semester}
-                            </div>
+                            </div> */}
                             <div>
                               <span className="font-semibold">Gender:</span>{" "}
                               {faculty.gender}

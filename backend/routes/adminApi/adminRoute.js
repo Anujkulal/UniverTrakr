@@ -4,6 +4,7 @@ import {
   adminLoginController,
   adminLogoutController,
   adminRegisterController,
+  deleteAdminController,
   getAdminByIdDetailsController,
   getAllAdminDetailsController,
   getMyDetailsController,
@@ -79,10 +80,11 @@ router.get("/subject", authenticate, roleOnly("Admin"), getAllSubjectController)
 router.delete("/subject/:subjectCode", authenticate, roleOnly("Admin"), removeSubjectController);
 
 // Admin - admin management
-router.post("/", authenticate, upload.single("profile"), roleOnly("Admin"), addAdminDetailsController);  // Create admin
-router.get("/", authenticate, roleOnly("Admin"), getAllAdminDetailsController);                         // Get all admins
-router.get("/:adminId", authenticate, roleOnly("Admin"), getAdminByIdDetailsController);                // Get admin by ID
-router.put("/:adminId", authenticate, roleOnly("Admin"), upload.single("profile"), updateAdminDetailsController);  // Update admin
-router.put("/:userId/password", authenticate, roleOnly("Admin"), updateSelectedAdminPasswordController); // Update another admin's password
+router.post("/admins", authenticate, upload.single("profile"), roleOnly("Admin"), addAdminDetailsController);  // Create admin
+router.get("/admins", authenticate, roleOnly("Admin"), getAllAdminDetailsController);                         // Get all admins
+router.get("/admins/:adminId", authenticate, roleOnly("Admin"), getAdminByIdDetailsController);                // Get admin by ID
+router.delete("/admins/:curAdminId/:adminId", authenticate, roleOnly("Admin"), deleteAdminController);                // Get admin by ID
+router.put("/admins/:adminId", authenticate, roleOnly("Admin"), upload.single("profile"), updateAdminDetailsController);  // Update admin
+router.put("/admins/:userId/password", authenticate, roleOnly("Admin"), updateSelectedAdminPasswordController); // Update another admin's password
 
 export default router;

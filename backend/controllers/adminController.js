@@ -283,6 +283,27 @@ const updateAdminDetailsController = async (req, res) => {
   }
 };
 
+const deleteAdminController = async (req, res) => {
+  try {
+    const {curAdminId, adminId} = req.params;
+    // console.log(curAdminId === adminId)
+    if (curAdminId === adminId) {
+      return res.status(400).json({ message: "You cannot delete yourself" });
+    }
+
+    const deletedAdmin = await AdminModel.findOneAndDelete({adminId}, { new: true });
+
+    if (!deletedAdmin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+    await UserModel.findOneAndDelete({ userId: deletedAdmin.adminId });
+    return res.status(200).json({ message: "Admin deleted successfully", admin: deletedAdmin });
+  } catch (error) {
+    console.error("Error while deleting Admin:", error);
+    res.status(500).json({ message: "Server error" }); 
+  }
+}
+
 export {
   adminLoginController,
   adminRegisterController,
@@ -294,4 +315,5 @@ export {
   getAdminByIdDetailsController,
   getMyDetailsController,
   updateAdminDetailsController,
+  deleteAdminController,
 };

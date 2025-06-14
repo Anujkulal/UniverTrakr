@@ -28,7 +28,7 @@ const EditFaculty: React.FC<EditFacultyProps> = ({faculty, onClose, fetchFaculti
   const [form, setForm] = useState({ ...faculty })
   const [preview, setPreview] = useState<string | null>(null)
   // const [loading, setLoading] = useState(false)
-  const {loading } = useSelector((state: RootState) => state.faculty)
+  const { loading } = useSelector((state: RootState) => state.faculty)
   const [branches, setBranches] = useState<BranchProps[]>([])
 
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
@@ -84,6 +84,7 @@ const EditFaculty: React.FC<EditFacultyProps> = ({faculty, onClose, fetchFaculti
         if(auth && auth.role)
             fetchBranch();
     }, [])
+    
   return (
     <form
       className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg space-y-5"
@@ -190,7 +191,7 @@ const EditFaculty: React.FC<EditFacultyProps> = ({faculty, onClose, fetchFaculti
           name="gender"
           value={form.gender}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
           required
         >
           <option value="">Gender</option>

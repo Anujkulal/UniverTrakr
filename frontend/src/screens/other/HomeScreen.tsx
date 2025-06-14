@@ -9,6 +9,7 @@ import FacultyScreen from "../faculty/FacultyScreen";
 import TimetableScreen from "./TimetableScreen";
 import SubjectScreen from "./SubjectScreen";
 import DashboardScreen from "./DashboardScreen";
+import AdminScreen from "../admin/AdminScreen";
 
 const HomeScreen = () => {
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
@@ -36,6 +37,7 @@ const HomeScreen = () => {
           <Route path="notice" element={<NoticeScreen />} />
           <Route path="timetable" element={<TimetableScreen />} />
           <Route path="subjects" element={<SubjectScreen />} />
+          <Route path="admins" element={<AdminScreen />} />
       </Routes>
     </div>
   );
