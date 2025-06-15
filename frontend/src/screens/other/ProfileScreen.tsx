@@ -38,6 +38,7 @@ const ProfileScreen = () => {
     email: "",
     userId: "",
     adminId: "",
+    semester: "",
     enrollmentNo: "",
     facultyId: "",
     role: auth?.role?.toLowerCase(),
@@ -49,8 +50,8 @@ const ProfileScreen = () => {
   const fetchCurrUser = async () => {
     try {
       const response = await axios.get(`${backend_url}/${user.role}/me`, {withCredentials: true});
-      // console.log('Response user data:', response);
-      console.log("Role from auth:", auth.role);
+      console.log('Response user data:', response);
+      // console.log("Role from auth:", auth.role);
       
       setUser(prev => ({
         ...prev,
@@ -63,6 +64,7 @@ const ProfileScreen = () => {
         email: response.data.user.email,
         userId: response.data.user.adminId || response.data.user.enrollmentNo || response.data.user.facultyId, // Use adminId if available, else userId
         adminId: response.data?.user?.adminId || "",
+        semester: response.data?.user?.semester || "",
         enrollmentNo: response.data?.user?.enrollmentNo || "",
         facultyId: response.data?.user?.facultyId || "",
         role: auth?.role?.toLowerCase(),
@@ -81,6 +83,9 @@ const ProfileScreen = () => {
   }, [])
   
   auth.branchCode = user.department || ""; // Set branchCode for faculty
+  if(user.semester){
+    auth.semester = user.semester; // Set semester for student
+  }
   localStorage.setItem("user", JSON.stringify(auth));
 
   // Prevent rendering if not authenticated

@@ -34,8 +34,7 @@ const StudentScreen = () => {
       <div className="w-full flex justify-center">
         {mode === 'add' && <AddStudent />}
         {mode === 'manage' && ( <StudentsList /> )}
-        {mode === 'add-multiple' && ( <AddMultipleStudent />
-        )}
+        {mode === 'add-multiple' && ( <AddMultipleStudent />)}
       </div>
     </div>
   )

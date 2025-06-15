@@ -54,6 +54,7 @@ const CreateTimetable = () => {
   const dispatch = useDispatch<AppDispatch>();
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
   const role = (auth.role.toLowerCase() === "admin" || auth.role.toLowerCase() === "faculty") ? auth.role.toLowerCase() : "student";
+  const branchCode = auth?.branchCode || "";
 
   const columns = timings.map(() => ({
     editor: "text",
@@ -141,11 +142,16 @@ const CreateTimetable = () => {
         >
           <option value="">Branch / Department</option>
           {
-            branches.map((branch) => (
-              <option key={branch.code} value={branch.code}>
-                {branch.name} ({branch.code})
-              </option>
-            ))
+            role === "faculty" ? (
+              <option value={branchCode}>{branchCode}</option>
+            ) : (
+                branches.map((branch) => (
+                  <option key={branch.code} value={branch.code}>
+                    {branch.name} ({branch.code})
+                  </option>
+                ))
+                      
+            )
           }          
         </select>
           <Input

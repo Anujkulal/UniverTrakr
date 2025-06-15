@@ -7,7 +7,8 @@ import { AddNoticeController, GetAllNoticesController, RemoveNoticeController } 
 import { deleteTimetableController, getTimetableController, saveTimetableController, updateTimetableController } from "../../controllers/other/timetableController.js";
 import { addBranchController, getAllBranchController, removeBranchController } from "../../controllers/other/branchController.js";
 import { addSubjectController, getAllSubjectController, removeSubjectController } from "../../controllers/other/subjectController.js";
-import { getMarksByEnrollmentNoController } from "../../controllers/other/marksController.js";
+import { addOrUpdateMarksController, getMarksByEnrollmentNoController } from "../../controllers/other/marksController.js";
+import { addMaterialController, getMaterialController } from "../../controllers/other/materialController.js";
 
 const router = express.Router();
 
@@ -29,8 +30,13 @@ router.get("/students/:enrollmentNo", authenticate, roleOnly("Faculty"), getStud
 router.put("/students/:enrollmentNo", authenticate, roleOnly("Faculty"), upload.single("profile"), updateStudentDetailsController);    // Update student details
 router.delete("/students/:enrollmentNo", authenticate, roleOnly("Faculty"), deleteStudentController)
 
+// Material management (by Faculty)
+router.post("/material", authenticate, roleOnly("Faculty"), upload.single("material"), addMaterialController); // Add material
+router.get("/material/:branchCode", authenticate, roleOnly("Faculty"), getMaterialController); // get material
+
 // Marks management (by Faculty)
-router.get("/marks/:enrollmentNo", authenticate, roleOnly("Faculty"), getMarksByEnrollmentNoController)
+router.post("/marks", authenticate, roleOnly("Faculty"), addOrUpdateMarksController)
+router.get("/marks/:enrollmentNo/:subject", authenticate, roleOnly("Faculty"), getMarksByEnrollmentNoController)
 
 // Notice management (by Faculty)
 router.post("/notice", authenticate, roleOnly("Faculty"), AddNoticeController); // Add notice

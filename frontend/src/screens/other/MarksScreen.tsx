@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import React, { useEffect, useState } from "react";
-import ListMarks from "./features/marks/ListMarks";
 import UploadMarks from "./features/marks/UploadMarks";
-import ViewStudent from "./features/marks/ViewStudent";
 import { baseUrl } from "@/lib/baseUrl";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
@@ -130,41 +128,6 @@ const MarksScreen = () => {
 
   return (
     <>
-      {/* <div className="flex flex-1 flex-col items-center justify-start py-8"> */}
-      {/* <div className="flex gap-4 mb-8">
-            <Button
-            variant={mode === 'view' ? 'default' : 'outline'}
-            onClick={() => setMode("view")}
-            >
-              Upload Students marks
-            </Button>
-            <Button
-            variant={mode === 'upload-marks' ? 'default' : 'outline'}
-            onClick={() => setMode("upload-marks")}
-            >
-              Upload Students marks
-            </Button>
-            <Button
-            variant={mode === 'list' ? 'default' : 'outline'}
-            onClick={() => setMode("list")}
-            >
-              List Students marks
-            </Button>
-            <Button
-            variant={mode === 'manage' ? 'default' : 'outline'}
-            onClick={() => setMode("manage")}
-            >
-              Manage marks
-            </Button>
-          </div> */}
-      {/* <div className="w-full flex justify-center"> */}
-      {/* {mode === 'view' && <ViewStudent />}
-            {mode === 'upload-marks' && <UploadMarks />}
-            {mode === 'list' && <ListMarks />} */}
-      {/* {mode === 'manage' && ( <FacultiesList /> )} */}
-      {/* </div> */}
-      {/* </div> */}
-
       <div className="w-full max-w-3xl mx-auto mt-8">
         <MessageBar
           variant={message?.type}
@@ -330,9 +293,9 @@ const MarksScreen = () => {
             >
               <UploadMarks
                 fetchStudents={fetchStudents}
-                subjects={subjects}
+                // subjects={subjects}
                 enrollmentNo={isUploading}
-                // inputSubject={inputSubject}
+                subject={inputSubject}
                 // setInputSubject={setInputSubject}
                 onClose={handleCloseUpload}
                 setMessage={setMessage}

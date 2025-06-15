@@ -1,4 +1,5 @@
 *.png
+material/*.pdf
 
 !default/default-profile.png
 !admin/default-profile.png

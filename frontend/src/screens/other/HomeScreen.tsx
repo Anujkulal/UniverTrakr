@@ -12,6 +12,7 @@ import DashboardScreen from "./DashboardScreen";
 import AdminScreen from "../admin/AdminScreen";
 import NotFound from "./NotFound";
 import MarksScreen from "./MarksScreen";
+import MaterialScreen from "./MaterialScreen";
 
 const HomeScreen = () => {
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
@@ -48,7 +49,7 @@ const HomeScreen = () => {
       <Route path="upload-marks" element={<MarksScreen />} key="upload-marks" />,
       <Route path="timetable" element={<TimetableScreen />} key="timetable" />,
       <Route path="notice" element={<NoticeScreen />} key="notice" />,
-      <Route path="material" element={<SubjectScreen />} key="material" />,
+      <Route path="material" element={<MaterialScreen />} key="material" />,
     ],
     student: [
       <Route index path="profile" element={<ProfileScreen />} key="profile" />,

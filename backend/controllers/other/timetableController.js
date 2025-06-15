@@ -30,6 +30,22 @@ const getTimetableController = async (req, res) => {
   }
 }
 
+const viewTimetableController = async (req, res) => {
+  try {
+    const { branch, semester } = req.params;
+    // console.log("Fetching timetable for branch:", branch, "semester:", semester);
+    const timetable = await TimetableModel.findOne({ branch, semester });
+    if (!timetable) {
+      return res.status(200).json({ message: "Timetable not found" });
+    }
+    res.status(200).json(timetable);
+  } catch (error) {
+    console.error("Error while fetching timetable:", error);
+    res.status(500).json({ message: "Server error" });
+    
+  }
+}
+
 const deleteTimetableController = async (req, res) => {
   try {
     const { branch, semester } = req.params;
@@ -88,6 +104,7 @@ const updateTimetableController = async (req, res) => {
 export {
     saveTimetableController,
     getTimetableController,
+    viewTimetableController,
     deleteTimetableController,
     updateTimetableController,
 }

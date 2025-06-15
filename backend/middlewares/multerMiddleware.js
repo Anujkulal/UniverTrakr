@@ -13,23 +13,28 @@ const storage = multer.diskStorage({
     } else if (req.body?.enrollmentNo) {
       folder = "media/student";
     }
+    else if (file.fieldname === "material") {
+      folder = "media/material";
+    }
 
     fs.mkdirSync(folder, {recursive: true});
     cb(null, folder);
   },
   filename: function (req, file, cb) {
     let filename = "";
-    // console.log("req.body:::", req.body);
-    // if (req.body?.type === "timetable"){
-    //     filename = `Timetable_${req.body.semester}_Semester_${req.body.branch}.png`;
-    // }
-    // else if (req.body?.type === "profile"){
+
+    // console.log("File fieldname:", file.fieldname);
+
     if (req.body?.adminId) {
       filename = `admin_profile_${req.body.adminId}.png`;
     } else if (req.body?.facultyId) {
       filename = `faculty_profile_${req.body.facultyId}.png`;
     } else if (req.body?.enrollmentNo) {
       filename = `student_profile_${req.body.enrollmentNo}.png`;
+    }
+
+    if(file.fieldname === "material"){
+      filename = `${req.body.title}_Subject_${req.body.subject}.pdf`;
     }
     // }
     // else if (req.body?.type === "material") {

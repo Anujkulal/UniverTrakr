@@ -7,6 +7,7 @@ import profileReducer from './slices/profileSlice';
 import branchReducer from './slices/branchSlice';
 import timetableReducer from './slices/timetableSlice';
 import subjectReducer from './slices/subjectSlice';
+import marksReducer from './slices/marksSlice';
 
 export const store = configureStore({
     reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
         branch: branchReducer,
         timetable: timetableReducer,
         subject: subjectReducer,
+        marks: marksReducer,
     }
 })
 

@@ -5,6 +5,10 @@ const MaterialSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  branch: {
+    type: String,
+    required: true,
+  },
   subject: {
     type: String,
     required: true,
@@ -13,9 +17,9 @@ const MaterialSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  link: {
+  file: {
     type: String,
-    required: true,
+    // required: true,
   }
 }, { timestamps: true });
 

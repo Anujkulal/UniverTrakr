@@ -5,6 +5,10 @@ const MarksSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  subject: {
+    type: String,
+    required: true,
+  },
   internal: {
     internal1: { type: Number, default: 0 },
     internal2: { type: Number, default: 0 },
@@ -25,7 +29,7 @@ const MarksSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  finalMarks: {
+  totalMarks: {
     type: Number,
     default: 0,
   }

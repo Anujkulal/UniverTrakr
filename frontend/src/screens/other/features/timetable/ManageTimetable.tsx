@@ -34,6 +34,8 @@ const ManageTimetable = () => {
     // const {error, success } = useSelector((state: RootState) => state.timetable);
       const dispatch = useDispatch<AppDispatch>();
       const auth = JSON.parse(localStorage.getItem("user") || "{}");
+      const role = auth?.role?.toLowerCase() || "";
+      const branchCode = auth?.branchCode || "";
 
     const handleFetchTimetable = async () => {
         setLoading(true);
@@ -99,83 +101,63 @@ const ManageTimetable = () => {
               </tr>
             </thead>
             <tbody>
-              {timetables.map((timetable) => (
-                <React.Fragment key={timetable._id}>
-                  <tr className="border-b border-gray-200 hover:bg-blue-50 transition">
+              {
+              role === "faculty" ? (
+                timetables.map(timetable => (
+                  branchCode === timetable.branch && (
+                  <React.Fragment key={timetable._id}>
+                    <tr className="border-b border-gray-200 hover:bg-blue-50 transition">
+                      
+                      <td className="px-4 py-3">{timetable.branch}</td>
+                      <td className="px-4 py-3">{timetable.semester}</td>
+                      <td className="px-4 py-3 flex gap-4">
+                        
+                        <Button
+                          className="bg-gradient-to-r from-green-500 to-green-700 hover:bg-green-600 focus:ring-green-500"
+                          onClick={() => handleEdit(timetable)}
+                        >
+                          <FaEdit />
+                        </Button>
+                        <Button
+                        variant={"destructive"}
+                        onClick={() => handleDelete(timetable.branch, timetable.semester)}
+                        >
+                          <MdDeleteForever />
+                        </Button>
+                      </td>
+                    </tr>
+                  </React.Fragment>
+                  )
+                ))
+              ) : (
+                
+                timetables.map((timetable) => (
+                  <React.Fragment key={timetable._id}>
+                    <tr className="border-b border-gray-200 hover:bg-blue-50 transition">
+                      
+                      <td className="px-4 py-3">{timetable.branch}</td>
+                      <td className="px-4 py-3">{timetable.semester}</td>
+                      <td className="px-4 py-3 flex gap-4">
+                        
+                        <Button
+                          className="bg-gradient-to-r from-green-500 to-green-700 hover:bg-green-600 focus:ring-green-500"
+                          onClick={() => handleEdit(timetable)}
+                        >
+                          <FaEdit />
+                        </Button>
+                        <Button
+                        variant={"destructive"}
+                        onClick={() => handleDelete(timetable.branch, timetable.semester)}
+                        >
+                          <MdDeleteForever />
+                        </Button>
+                      </td>
+                    </tr>
                     
-                    <td className="px-4 py-3">{timetable.branch}</td>
-                    <td className="px-4 py-3">{timetable.semester}</td>
-                    <td className="px-4 py-3 flex gap-4">
-                      {/* <Button
-                        variant={expanded === timetable._id ? "outline" : "plain"}
-                        onClick={() => handleExpand(timetable._id)}
-                      >
-                        {expanded === timetable._id ? (
-                          <FaChevronUp />
-                        ) : (
-                          <FaChevronDown />
-                        )}
-                      </Button> */}
-                      <Button
-                        className="bg-gradient-to-r from-green-500 to-green-700 hover:bg-green-600 focus:ring-green-500"
-                        onClick={() => handleEdit(timetable)}
-                      >
-                        <FaEdit />
-                      </Button>
-                      <Button
-                      variant={"destructive"}
-                      onClick={() => handleDelete(timetable.branch, timetable.semester)}
-                      >
-                        <MdDeleteForever />
-                      </Button>
-                    </td>
-                  </tr>
-                  {/* AnimatePresence + motion for dropdown details */}
-                  {/* <AnimatePresence>
-                    {expanded === student._id && (
-                      <motion.tr
-                        className="bg-blue-50"
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.25 }}
-                      >
-                        <td colSpan={4} className="px-6 py-4">
-                          <div className="flex flex-col gap-2">
-                            {student.profile && (
-                              <div>
-                                <img
-                                  src={`${base_url}/media/student/${student.profile}?v=${student.updatedAt || Date.now()}`} 
-                                  // Force the image to reload by appending a cache-busting query string (e.g., a timestamp or Date.now()) to the image URL.
-
-                                  alt="Profile"
-                                  className="w-16 h-16 rounded-full border-2 border-indigo-300 mt-2"
-                                />
-                              </div>
-                            )}
-                            <div>
-                              <span className="font-semibold">Email:</span>{" "}
-                              {student.email}
-                            </div>
-                            <div>
-                              <span className="font-semibold">Phone:</span>{" "}
-                              {student.phoneNumber}
-                            </div>
-                            <div>
-                              <span className="font-semibold">Semester:</span>{" "}
-                              {student.semester}
-                            </div>
-                            <div>
-                              <span className="font-semibold">Gender:</span>{" "}
-                              {student.gender}
-                            </div>
-                          </div>
-                        </td>
-                      </motion.tr>
-                    )}
-                  </AnimatePresence> */}
-                </React.Fragment>
-              ))}
+                  </React.Fragment>
+                ))
+              )
+              }
             </tbody>
           </table>
         </div>
