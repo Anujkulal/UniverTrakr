@@ -31,7 +31,7 @@ const AddMaterial = () => {
   } | null>(null);
   const [subjects, setSubjects] = useState<SubjectProps[]>([]);  
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent <HTMLInputElement | HTMLSelectElement>) => {
     if (e.target.type === "file") {
         const file = e.target.files ? e.target.files[0] : null;
         if(file && file.type !== "application/pdf") {

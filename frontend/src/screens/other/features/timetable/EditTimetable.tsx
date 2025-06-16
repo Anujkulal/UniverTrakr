@@ -101,8 +101,6 @@ const EditTimetable: React.FC<EditTimetableProps> = ({
         console.error("Error saving timetable:", error);
         alert(`Failed to save timetable. Please try again.", ${error}`);
       });
-    // setBranch("");
-    // setSemester("");
   };
   return (
     <div className="max-w-6xl mx-auto mt-10 p-10 bg-gradient-to-br from-gray-50 to-blue-50 rounded-3xl shadow-2xl border border-blue-100">

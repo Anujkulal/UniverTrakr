@@ -47,7 +47,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ user, onClose, setMessa
   }
 
   return (
-    // <div className="">
       <form
         className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md space-y-5 relative"
         onSubmit={handleSubmit}
@@ -89,7 +88,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ user, onClose, setMessa
           {loading ? 'Changing...' : 'Change Password'}
         </Button>
       </form>
-    // </div>
   )
 }
 

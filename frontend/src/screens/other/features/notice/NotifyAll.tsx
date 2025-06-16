@@ -50,7 +50,6 @@ const NotifyAll = () => {
           placeholder="Title"
           value={form.title}
           onChange={handleChange}
-          // className="w-full px-4 py-2 border rounded"
           required
         />
         <textarea

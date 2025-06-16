@@ -105,8 +105,6 @@ const UploadMarks: React.FC<UploadMarksProps> = ({
   }, [])
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // You may want to validate here
-    // Handle form submission logic here
     // alert(`Branch: ${form.branch}\nSemester: ${form.semester}\nSubject: ${form.subject}`)
     
     dispatch(uploadMarks({form, internalAvg, totalInternal, totalMarks}));

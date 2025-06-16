@@ -43,12 +43,7 @@ const NoticeScreen = () => {
           )
         }
 
-        {/* <Button
-        variant={mode === 'add' ? 'default' : 'outline'}
-        onClick={() => setMode("add")}
-        >
-          Add Notice
-        </Button> */}
+        
         <Button
         variant={mode === 'view' ? 'default' : 'outline'}
         className='bg-orange-400 hover:text-orange-500'

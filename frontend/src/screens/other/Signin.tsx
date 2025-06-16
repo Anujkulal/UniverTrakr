@@ -47,8 +47,7 @@ const Signin = () => {
     if (auth.error) setError(auth.error);
     else setError("");
     if (auth.user) {
-      // console.log("User logged in role:", role);
-      // Redirect to dashboard or home after successful login
+      
       if(role === "admin") {
         navigate("/admin/dashboard");
       }

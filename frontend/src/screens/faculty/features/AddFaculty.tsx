@@ -168,18 +168,7 @@ const AddFaculty = () => {
           onChange={handleChange}
           required
         />
-        {/* <select
-          name="semester"
-          value={form.semester}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
-          required
-        >
-          <option value="">Semester</option>
-          {[...Array(8)].map((_, i) => (
-            <option key={i + 1} value={i + 1}>{i + 1}</option>
-          ))}
-        </select> */}
+        
       </div>
       <div className="flex gap-4">
         

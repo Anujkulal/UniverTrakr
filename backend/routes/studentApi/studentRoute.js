@@ -4,6 +4,7 @@ import {
   studentLoginController,
   studentLogoutController,
   studentRegisterController,
+  updateStudentDetailsController,
   updateStudentLoggedInPasswordController
 } from "../../controllers/studentController.js";
 import { authenticate, roleOnly } from "../../middlewares/authenticate.js";
@@ -12,6 +13,7 @@ import { viewTimetableController } from "../../controllers/other/timetableContro
 import { viewMarksController } from "../../controllers/other/marksController.js";
 import { getAllSubjectController } from "../../controllers/other/subjectController.js";
 import { getMaterialController } from "../../controllers/other/materialController.js";
+import upload from "../../middlewares/multerMiddleware.js";
 
 const router = express.Router();
 
@@ -38,5 +40,6 @@ router.get("/marks/:enrollmentNo", authenticate, roleOnly("Student"), viewMarksC
 // Student self
 router.put("/me/password", authenticate, roleOnly("Student"), updateStudentLoggedInPasswordController);
 router.get("/me", authenticate, roleOnly("Student"), getStudentMyDetailsController);
+router.put("/students/:enrollmentNo", authenticate, roleOnly("Student"), upload.single("profile"), updateStudentDetailsController); 
 
 export default router;

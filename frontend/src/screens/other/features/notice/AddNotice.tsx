@@ -98,14 +98,7 @@ const AddNotice = () => {
           onChange={handleChange}
           required
         />
-        {/* <Input
-          type="text"
-          name="branch"
-          placeholder="Branch"
-          value={form.branch}
-          onChange={handleChange}
-          required
-        /> */}
+        
         <select
           name="branch"
           value={form.branch}

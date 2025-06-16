@@ -81,8 +81,6 @@ const CreateTimetable = () => {
           console.error("Error saving timetable:", error);
           // alert(`Failed to save timetable. Please try again.", ${error}`);
       });
-    // setBranch("");
-    // setSemester("");
   };
 
   const fetchBranch = async () => {
@@ -125,14 +123,7 @@ const CreateTimetable = () => {
       <H2 className="text-3xl text-blue-700 drop-shadow-lg tracking-tight">Class Timetable</H2>
       <div className="flex flex-col gap-6 mb-10 justify-center">
         <div className="flex flex-wrap gap-6 justify-center items-center">
-          {/* <Input
-            type="text"
-            placeholder="Branch (e.g. CSE)"
-            value={branch}
-            onChange={e => setBranch(e.target.value)}
-            className="w-56 text-lg"
-            required
-          /> */}
+          
           <select
           name="branch"
           value={branch}
@@ -176,13 +167,7 @@ const CreateTimetable = () => {
           >
             Load Timings
           </Button>
-          {/* <Button
-            onClick={handleFetchTimetable}
-            variant={"success"}
-            className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-xl shadow transition"
-          >
-            Fetch Timetable
-          </Button> */}
+          
           <Button
           variant={"success"}
             onClick={handleSave}

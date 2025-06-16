@@ -134,23 +134,6 @@ const AddAdmin = () => {
         </select>
       </div>
       <div className="flex gap-4">
-        
-        {/* <select
-          name="department"
-          value={form.department}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
-          required
-        >
-          <option value="">Branch / Department</option>
-          {
-            branches.map((branch) => (
-              <option key={branch.code} value={branch.code}>
-                {branch.name} ({branch.code})
-              </option>
-            ))
-          }          
-        </select> */}
 
       </div>
       <div className="flex flex-col items-center">

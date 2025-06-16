@@ -219,10 +219,7 @@ const AdminList = () => {
                                   <span className="font-semibold">Phone:</span>{" "}
                                   {admin.phoneNumber}
                                 </div>
-                                {/* <div>
-                                  <span className="font-semibold">Semester:</span>{" "}
-                                  {admin.semester}
-                                </div> */}
+                                
                                 <div>
                                   <span className="font-semibold">Gender:</span>{" "}
                                   {admin.gender}

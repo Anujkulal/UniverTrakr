@@ -65,15 +65,7 @@ const HomeScreen = () => {
       <Routes>
         { routesByRole[role] || null }
         <Route path="*" element={<NotFound />} />
-          {/* <Route index path="dashboard" element={<DashboardScreen />} />
-          <Route path="profile" element={<ProfileScreen />} />
-          <Route path="student" element={<StudentScreen />} />
-          <Route path="faculty" element={<FacultyScreen />} />
-          <Route path="branch" element={<BranchScreen />} />
-          <Route path="notice" element={<NoticeScreen />} />
-          <Route path="timetable" element={<TimetableScreen />} />
-          <Route path="subjects" element={<SubjectScreen />} />
-          <Route path="admins" element={<AdminScreen />} /> */}
+          
       </Routes>
     </div>
   );

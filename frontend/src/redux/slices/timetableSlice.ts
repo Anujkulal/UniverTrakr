@@ -68,20 +68,6 @@ export const fetchTimetable = createAsyncThunk<
     }
 });
 
-// export const fetchTimetableByBranchSemester = createAsyncThunk<
-//   any, { branch: string; semester: string; role: string },{ rejectValue: string }
-// >("timetable/fetchTimetableByBranchSemester", async ({ branch, semester, role }, { rejectWithValue }) => {
-//     try {
-//       const response = await axios.get(`${backend_url}/${role}/timetable/${branch}/${semester}`, {withCredentials: true});
-//       return response.data;
-//     }
-//     catch(err: any){
-//         return rejectWithValue(
-//             err.response?.data?.message || "Failed to fetch timetable"
-//         );
-//     }
-// });
-
 const timetableSlice = createSlice({
     name: "timetable",
     initialState,
@@ -138,22 +124,6 @@ const timetableSlice = createSlice({
             state.error = action.payload || "Failed to update timetable";
             state.success = null;
         });
-        
-        // .addCase(fetchTimetableByBranchSemester.pending, (state) => {
-        //     state.loading = true;
-        //     state.error = null;
-        //     state.success = null;
-        // })
-        // .addCase(fetchTimetableByBranchSemester.fulfilled, (state, action) => {
-        //     state.loading = false;
-        //     state.success = action.payload.message || "Timetable fetched successfully!";
-        //     state.error = null;
-        // })
-        // .addCase(fetchTimetableByBranchSemester.rejected, (state, action) => {
-        //     state.loading = false;
-        //     state.error = action.payload || "Failed to fetch timetable";
-        //     state.success = null;
-        // });
     }
 })
 

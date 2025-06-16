@@ -186,10 +186,7 @@ const FacultiesList = () => {
                               <span className="font-semibold">Phone:</span>{" "}
                               {faculty.phoneNumber}
                             </div>
-                            {/* <div>
-                              <span className="font-semibold">Semester:</span>{" "}
-                              {faculty.semester}
-                            </div> */}
+                           
                             <div>
                               <span className="font-semibold">Gender:</span>{" "}
                               {faculty.gender}

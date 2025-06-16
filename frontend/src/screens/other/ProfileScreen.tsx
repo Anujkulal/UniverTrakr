@@ -146,8 +146,7 @@ const ProfileScreen = () => {
                   </>
                 )
               }
-              {/* <span className="font-medium text-gray-700">Department:</span>
-              <span className="text-gray-600">{user.department}</span> */}
+             
             </div>
             <div className="flex justify-between">
               <span className="font-medium text-gray-700">Joined:</span>
