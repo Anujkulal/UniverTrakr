@@ -9,6 +9,7 @@ import {
 import { authenticate, roleOnly } from "../../middlewares/authenticate.js";
 import { GetAllNoticesController } from "../../controllers/other/NoticeController.js";
 import { viewTimetableController } from "../../controllers/other/timetableController.js";
+import { viewMarksController } from "../../controllers/other/marksController.js";
 
 const router = express.Router();
 
@@ -23,6 +24,8 @@ router.get("/notice", authenticate, roleOnly("Student"), GetAllNoticesController
 // timetable
 router.get("/timetable/:branch/:semester", authenticate, roleOnly("Student"), viewTimetableController);
 
+//marks
+router.get("/marks/:enrollmentNo", authenticate, roleOnly("Student"), viewMarksController);
 
 // Student self
 router.put("/me/password", authenticate, roleOnly("Student"), updateStudentLoggedInPasswordController);

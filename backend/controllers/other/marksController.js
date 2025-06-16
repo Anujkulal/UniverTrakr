@@ -26,6 +26,7 @@ const addOrUpdateMarksController = async (req, res) => {
     }
 };
 
+// for faculties
 const getMarksByEnrollmentNoController = async (req, res) => {
     try {
         const { enrollmentNo, subject } = req.params;
@@ -43,7 +44,26 @@ const getMarksByEnrollmentNoController = async (req, res) => {
     }
 };
 
+//for students
+const viewMarksController = async (req, res) => {
+    try {
+        const { enrollmentNo } = req.params;
+        const marks = await MarksModel.find({ enrollmentNo });
+
+        if (!marks) {
+            // No error, just indicate marks not present
+            return res.status(200).json({ message: "No marks found for this enrollment number", marks: null });
+        }
+
+        return res.status(200).json({ message: "Marks found", marks });
+    } catch (error) {
+        console.error("Error fetching marks:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 export { 
     addOrUpdateMarksController,
     getMarksByEnrollmentNoController,
+    viewMarksController,
  };

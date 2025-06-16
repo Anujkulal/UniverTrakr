@@ -54,7 +54,7 @@ const HomeScreen = () => {
     student: [
       <Route index path="profile" element={<ProfileScreen />} key="profile" />,
       <Route path="timetable" element={<TimetableScreen />} key="timetable" />,
-      <Route path="marks" element={<StudentScreen />} key="marks" />,
+      <Route path="marks" element={<MarksScreen />} key="marks" />,
       <Route path="materials" element={<SubjectScreen />} key="materials" />,
       <Route path="notice" element={<NoticeScreen />} key="notice" />,
     ],
