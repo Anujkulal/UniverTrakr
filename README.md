@@ -82,7 +82,8 @@ A full-stack web application for managing college operations, including students
 
 ## Screenshots
 
-> _Add screenshots of dashboard, notice board, marks upload, etc. here._
+![Image1](assets/img1.jpg)
+![Image2](assets/img2.jpg)
 
 ## Contributing
 
