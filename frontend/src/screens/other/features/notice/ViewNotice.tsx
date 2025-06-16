@@ -25,14 +25,15 @@ const ViewNotice = () => {
 
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
   const role = auth?.role?.toLowerCase() || "";
+  const branchCode = auth?.branchCode || "";
 
   useEffect(() => {
     const fetchNotices = async () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await axios.get(`${backend_url}/${auth.role.toLowerCase()}/notice`, { withCredentials: true });
-        console.log("Notices fetched:", res.data.notices);
+        const res = await axios.get(`${backend_url}/${role}/notice`, { withCredentials: true });
+        console.log("Notices fetched: ", res.data.notices);
         setNotices(res.data.notices || []);
       } catch (err: any) {
         setError(err.response?.data?.message || "Failed to fetch notices");
@@ -40,25 +41,23 @@ const ViewNotice = () => {
       setLoading(false);
     };
     fetchNotices();
-  }, []);
+  }, [role]);
 
   const handleDeleteNotice = async (noticeId: string) => {
     if (!window.confirm("Are you sure you want to delete this notice?")) return;
-
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.delete(`${backend_url}/admin/notice/${noticeId}`, { withCredentials: true });
+      await axios.delete(`${backend_url}/admin/notice/${noticeId}`, { withCredentials: true });
       setNotices((prev) => prev.filter((notice) => notice._id !== noticeId));
-      // console.log("Notice deleted:", res.data.message);
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to delete notice");
     }
     setLoading(false);
-  }
+  };
 
   return (
-    <div className="w-2xl max-w-3xl max-h-[600px] overflow-y-auto mx-auto mt-10 bg-white rounded-2xl shadow-lg p-8">
+    <div className="w-full max-w-3xl mx-auto mt-10 bg-white rounded-2xl shadow-lg p-8">
       <H2 className="text-blue-700">Notices</H2>
       {error && (
         <MessageBar variant="error" message={error} onClose={() => setError(null)} />
@@ -68,48 +67,88 @@ const ViewNotice = () => {
       ) : notices.length === 0 ? (
         <div className="text-center text-gray-500">No notices found.</div>
       ) : (
-        <ul className="space-y-6">
-          {notices.map((notice) => (
-            <li key={notice._id} className="border-b flex justify-between border-gray-300 pb-4 bg-gray-200 p-2 rounded-2xl">
-              <div className="flex flex-col gap-1">
-                <span className="text-lg font-semibold text-blue-800">{notice.title}</span>
-                <span className="text-gray-700">{notice.description}</span>
-                {
-                  notice.branch.length > 0 && (
-                    <span className="text-sm text-gray-500">Branch: {notice.branch}</span>
-                  )
-                }
-                {/* <span className="text-sm text-gray-500">Branch: {notice.branch}</span> */}
-                <span className="text-xs text-gray-400">
-                  {new Date(notice.createdAt).toLocaleString()}
-                </span>
-                <span className="text-sm text-gray-500">
-                  Sent to: {notice.role}
-                </span>
-                {notice.link && (
-                  <a
-                    href={notice.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline text-sm"
-                  >
-                    View Link
-                  </a>
-                )}
-              </div>
+        <div className="max-h-[500px] overflow-y-auto pr-2">
+          <ul className="space-y-6">
+            {notices.map((notice) => (
+              <div key={notice._id}>
               {
                 role !== "student" && (
-                  <Button
-                  variant={"destructive"}
-                  onClick={() => handleDeleteNotice(notice._id)}
+                  <li
+                    key={notice._id}
+                    className="border-b flex justify-between border-gray-300 pb-4 bg-gray-100 p-4 rounded-2xl hover:shadow transition"
                   >
-                    <MdDeleteForever size={20} />
-                  </Button>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-lg font-semibold text-blue-800">{notice.title}</span>
+                      <span className="text-gray-700">{notice.description}</span>
+                      {notice.branch && (
+                        <span className="text-sm text-gray-500">Branch: {notice.branch}</span>
+                      )}
+                      <span className="text-xs text-gray-400">
+                        {new Date(notice.createdAt).toLocaleString()}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        Sent to: {notice.role}
+                      </span>
+                      {notice.link && (
+                        <a
+                          href={notice.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline text-sm"
+                        >
+                          View Link
+                        </a>
+                      )}
+                    </div>
+                    {role !== "student" && (
+                      <Button
+                        variant={"destructive"}
+                        onClick={() => handleDeleteNotice(notice._id)}
+                        className="self-start"
+                      >
+                        <MdDeleteForever size={20} />
+                      </Button>
+                    )}
+                  </li>
+
                 )
               }
-            </li>
-          ))}
-        </ul>
+              {
+                (role === "student" && notice.branch === branchCode || (role === "student" && notice.role === "All")) && (
+                  <li
+                    key={notice._id}
+                    className="border-b flex justify-between border-gray-300 pb-4 bg-gray-100 p-4 rounded-2xl hover:shadow transition"
+                  >
+                    <div className="flex flex-col gap-1">
+                      <span className="text-lg font-semibold text-blue-800">{notice.title}</span>
+                      <span className="text-gray-700">{notice.description}</span>
+                      {notice.branch && (
+                        <span className="text-sm text-gray-500">Branch: {notice.branch}</span>
+                      )}
+                      <span className="text-xs text-gray-400">
+                        {new Date(notice.createdAt).toLocaleString()}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        Sent to: {notice.role}
+                      </span>
+                      {notice.link && (
+                        <a
+                          href={notice.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline text-sm"
+                        >
+                          View Link
+                        </a>
+                      )}
+                    </div>
+                  </li>
+                )
+              }
+              </div>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

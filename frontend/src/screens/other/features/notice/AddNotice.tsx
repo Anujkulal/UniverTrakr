@@ -4,9 +4,14 @@ import { Input } from '@/components/ui/Input'
 import MessageBar from '@/components/ui/MessageBar'
 import { baseUrl } from '@/lib/baseUrl'
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const backend_url = baseUrl()
+
+interface BranchProps {
+    name: string;
+    code: string;
+}
 
 const AddNotice = () => {
     const [form, setForm] = useState({
@@ -17,10 +22,13 @@ const AddNotice = () => {
   })
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [branches, setBranches] = useState<BranchProps[]>([])
 
-  const auth = JSON.parse(localStorage.getItem('user') || '{}')
+  const auth = JSON.parse(localStorage.getItem("user") || "{}");
+  const role = auth?.role?.toLowerCase() || "";
+  const branchCode = auth?.branchCode || "";
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement >) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
@@ -37,6 +45,21 @@ const AddNotice = () => {
     }
     setLoading(false)
   }
+
+  const fetchBranch = async () => {
+        try {
+            const response = await axios.get(`${backend_url}/${auth.role.toLowerCase()}/branch`, { withCredentials: true})
+            setBranches(response.data.branch || [])
+            console.log('Fetched branches:', response.data.branch)
+        } catch (err) {
+            console.error('Failed to fetch branch:', err)
+        }
+    }
+
+    useEffect(() => {
+        if(auth && auth.role)
+            fetchBranch();
+    }, [])
 
   return (
     <div className="flex flex-1 items-start mt-10 justify-center">
@@ -75,14 +98,35 @@ const AddNotice = () => {
           onChange={handleChange}
           required
         />
-        <Input
+        {/* <Input
           type="text"
           name="branch"
           placeholder="Branch"
           value={form.branch}
           onChange={handleChange}
           required
-        />
+        /> */}
+        <select
+          name="branch"
+          value={form.branch}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-400"
+          required
+        >
+          <option value="">Branch</option>
+          {
+            role === "faculty" ? (
+              <option value={branchCode}>{branchCode}</option>
+            ) : (
+                branches.map((branch) => (
+                  <option key={branch.code} value={branch.code}>
+                    {branch.name} ({branch.code})
+                  </option>
+                ))
+                      
+            )
+          }
+        </select>
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? 'Adding...' : 'Add Notice'}
         </Button>

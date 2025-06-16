@@ -27,11 +27,11 @@ const seedAdmin = async () => {
 
     await AdminModel.create({
       adminId: "admin123",
-      firstname: "College",
-      middlename: "",
-      lastname: "Admin",
+      firstName: "College",
+      middleName: "",
+      lastName: "Admin",
       email: "admin@gmail.com",
-      phone: "1234567890",
+      phoneNumber: "1234567890",
       gender: "male",
      // profile: "default-profile.png",
     });

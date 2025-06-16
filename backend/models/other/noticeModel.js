@@ -13,7 +13,7 @@ const NoticeSchema = new mongoose.Schema({
         required: true,
     },
     branch: {
-        type: [String], // Array of branches
+        type: String, // Array of branches
     },
     role: {
         type: String, // Array of roles

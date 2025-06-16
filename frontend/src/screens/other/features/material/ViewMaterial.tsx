@@ -29,7 +29,7 @@ const ViewMaterial = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await axios.get(`${backend_url}/faculty/material/${branchCode}`, { withCredentials: true });
+        const res = await axios.get(`${backend_url}/${role}/material/${branchCode}`, { withCredentials: true });
         setMaterials(res.data.materials || []);
       } catch (err: any) {
         setError(err.response?.data?.message || "Failed to fetch materials");
@@ -40,7 +40,7 @@ const ViewMaterial = () => {
   }, []);
 
   return (
-    <div className="max-w-[700px] mx-auto mt-10 bg-white rounded-2xl shadow-lg p-8">
+    <div className="w-full max-w-[700px] mx-auto mt-10 bg-white rounded-2xl shadow-lg p-8">
       <H2 className="text-blue-700">Study Materials</H2>
       {error && (
         <MessageBar variant="error" message={error} onClose={() => setError(null)} />

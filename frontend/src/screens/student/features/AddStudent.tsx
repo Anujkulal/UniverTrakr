@@ -148,7 +148,7 @@ const AddStudent = () => {
           name="semester"
           value={form.semester}
           onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400"
+          className="w-full px-4 py-2 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-400"
           required
         >
           <option value="">Semester</option>

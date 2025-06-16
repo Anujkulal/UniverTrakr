@@ -55,7 +55,7 @@ const HomeScreen = () => {
       <Route index path="profile" element={<ProfileScreen />} key="profile" />,
       <Route path="timetable" element={<TimetableScreen />} key="timetable" />,
       <Route path="marks" element={<MarksScreen />} key="marks" />,
-      <Route path="materials" element={<SubjectScreen />} key="materials" />,
+      <Route path="materials" element={<MaterialScreen />} key="materials" />,
       <Route path="notice" element={<NoticeScreen />} key="notice" />,
     ],
   };
