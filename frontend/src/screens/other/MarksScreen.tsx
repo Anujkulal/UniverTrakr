@@ -33,6 +33,19 @@ interface SubjectProps {
   code: string;
 }
 
+interface Marks {
+  subject: string;
+  internal: {
+    internal1: number;
+    internal2: number;
+  };
+  internalAvg: number;
+  assignment: number;
+  totalInternal: number;
+  external: number;
+  totalMarks: number;
+}
+
 const MarksScreen = () => {
   // const [mode, setMode] = useState<'view' | 'upload-marks' | 'list' | 'manage'>('view')
 
@@ -48,7 +61,7 @@ const MarksScreen = () => {
     text: string;
   } | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [marksDetails, setMarksDetails] = useState([]);
+  const [marksDetails, setMarksDetails] = useState<Marks[]>([]);
 
   const auth = JSON.parse(localStorage.getItem("user") || "{}");
   const role = auth?.role?.toLowerCase() || "";
@@ -205,7 +218,6 @@ const MarksScreen = () => {
                 <span>Students not found!</span>
               ) : (
                 <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                  {/* <input type="search" name="" id="" placeholder="search here..."/> */}
                   <table className="w-full text-left">
                     <thead className="bg-blue-200">
                       <tr>
@@ -233,15 +245,11 @@ const MarksScreen = () => {
                                 onClick={() => handleExpand(student._id)}
                               >
                                 {expanded === student._id
-                                  ? /* <FaChevronUp /> */ "Back"
-                                  : /* <FaChevronDown /> */ "Next"}
+                                  ? "Back"
+                                  : "Next"
+                                  }
                               </Button>
-                              {/* <Button
-                                      className="bg-gradient-to-r from-green-500 to-green-700 hover:bg-green-600 focus:ring-green-500"
-                                      // onClick={() => handleEdit(student)}
-                                    >
-                                      <FaEdit />
-                                    </Button> */}
+                              
                               {role === "admin" && (
                                 <Button
                                   variant={"destructive"}
@@ -263,12 +271,7 @@ const MarksScreen = () => {
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.25 }}
                               >
-                                {/* <Input 
-                                      value={student.branch}
-                                      disabled
-                                      className='cursor-not-allowed bg-gray-100'
-                                      placeholder="Branch"
-                                      /> */}
+                              
                                 <td colSpan={4} className="px-6 py-4">
                                   <div className="flex gap-2 justify-between">
                                     <span className="border border-gray-300 p-2 rounded-2xl bg-gradient-to-r from-green-100 to-green-200">Branch: {student.branch}</span>
@@ -296,37 +299,7 @@ const MarksScreen = () => {
                                     </Button>
                                   </div>
                                 </td>
-                                {/* <td colSpan={4} className="px-6 py-4">
-                                        <div className="flex flex-col gap-2">
-                                          {student.profile && (
-                                            <div>
-                                              <img
-                                                src={`${base_url}/media/student/${student.profile}?v=${student.updatedAt || Date.now()}`} 
-                                                // Force the image to reload by appending a cache-busting query string (e.g., a timestamp or Date.now()) to the image URL.
-              
-                                                alt="Profile"
-                                                className="w-16 h-16 rounded-full border-2 border-indigo-300 mt-2"
-                                              />
-                                            </div>
-                                          )}
-                                          <div>
-                                            <span className="font-semibold">Email:</span>{" "}
-                                            {student.email}
-                                          </div>
-                                          <div>
-                                            <span className="font-semibold">Phone:</span>{" "}
-                                            {student.phoneNumber}
-                                          </div>
-                                          <div>
-                                            <span className="font-semibold">Semester:</span>{" "}
-                                            {student.semester}
-                                          </div>
-                                          <div>
-                                            <span className="font-semibold">Gender:</span>{" "}
-                                            {student.gender}
-                                          </div>
-                                        </div>
-                                      </td> */}
+                                
                               </motion.tr>
                             )}
                           </AnimatePresence>
@@ -348,19 +321,12 @@ const MarksScreen = () => {
                   >
                     <UploadMarks
                       fetchStudents={fetchStudents}
-                      // subjects={subjects}
                       enrollmentNo={isUploading}
                       subject={inputSubject}
-                      // setInputSubject={setInputSubject}
                       onClose={handleCloseUpload}
                       setMessage={setMessage}
                     />
-                    {/* <EditStudent
-                            fetchStudents={fetchStudents}
-                            student={editStudent}
-                            // onClose={handleCloseEdit}
-                            setMessage={setMessage}
-                          /> */}
+                    
                   </motion.div>
                 )}
               </AnimatePresence>
