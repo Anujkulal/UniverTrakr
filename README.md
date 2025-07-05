@@ -88,3 +88,6 @@ A full-stack web application for managing college operations, including students
 ## Contributing
 
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+
+## LICENSE
+[MIT License](LICENCE)
